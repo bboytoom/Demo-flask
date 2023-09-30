@@ -1,0 +1,11 @@
+2023-09-29 18:33:20,663 - INFO - [_internal.py:187] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://127.0.0.1:5000
+2023-09-29 18:33:20,664 - INFO - [_internal.py:187] - [33mPress CTRL+C to quit[0m
+2023-09-29 18:33:20,665 - INFO - [_internal.py:187] -  * Restarting with stat
+2023-09-29 18:33:21,000 - WARNING - [_internal.py:187] -  * Debugger is active!
+2023-09-29 18:33:21,001 - INFO - [_internal.py:187] -  * Debugger PIN: 108-899-818
+2023-09-29 18:34:00,548 - INFO - [_internal.py:187] - 127.0.0.1 - - [29/Sep/2023 18:34:00] "GET /api/v1/ping HTTP/1.1" 200 -
+2023-09-29 18:34:28,389 - INFO - [_internal.py:187] -  * Detected change in '/home/tom/Documents/MyCode/chatboot/src/__init__.py', reloading
+2023-09-29 18:34:28,467 - INFO - [_internal.py:187] -  * Restarting with stat
+2023-09-29 18:34:28,855 - WARNING - [_internal.py:187] -  * Debugger is active!
+2023-09-29 18:34:28,856 - INFO - [_internal.py:187] -  * Debugger PIN: 108-899-818
