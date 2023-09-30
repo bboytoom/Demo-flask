@@ -4,7 +4,7 @@ CONFIG = {
     'version': 1,
     'formatters': {
         'default': {
-            'format': '%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s'
+            'format': '%(asctime)s - %(levelname)s %(name)s: %(message)s - [%(filename)s:%(lineno)d]'
             }
         },
     'handlers': {

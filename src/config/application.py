@@ -13,9 +13,15 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    TESTING = False
+
+
+class TestingConfig(Config):
+    DEBUG = True
     TESTING = True
 
 
 config = {
-    'development': DevelopmentConfig
+    'development': DevelopmentConfig,
+    'testing': TestingConfig
     }
