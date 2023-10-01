@@ -8,6 +8,8 @@ load_dotenv('.env')
 
 
 def create_app():
+    # Config
+    from src.config.sqlalchemy_db import db
     from src.routes.generals import generals
     from src.config.application import config
 
@@ -15,6 +17,9 @@ def create_app():
     app.config.from_object(config[os.environ.get('ENV')])
 
     CORS(app)
+
+    # Database
+    db.init_app(app)
 
     # Routes
     app.register_blueprint(generals)
