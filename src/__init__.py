@@ -1,10 +1,14 @@
 import os
 
 from dotenv import load_dotenv
+
 from flask import Flask
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 load_dotenv('.env')
+
+migrate = Migrate()
 
 
 def create_app():
@@ -20,6 +24,7 @@ def create_app():
 
     # Database
     db.init_app(app)
+    migrate.init_app(app, db)
 
     # Routes
     app.register_blueprint(generals)

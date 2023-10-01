@@ -27,7 +27,6 @@ class User(db.Model):
 
     onboarding = db.Column(
         db.Enum(TypeOnboarding),
-        default=TypeOnboarding.no_repeat.value,
         nullable=False
         )
 
