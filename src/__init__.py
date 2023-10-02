@@ -1,13 +1,19 @@
 import os
 
 from dotenv import load_dotenv
+
 from flask import Flask
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 load_dotenv('.env')
 
+migrate = Migrate()
+
 
 def create_app():
+    # Config
+    from src.config.sqlalchemy_db import db
     from src.routes.generals import generals
     from src.config.application import config
 
@@ -15,6 +21,10 @@ def create_app():
     app.config.from_object(config[os.environ.get('ENV')])
 
     CORS(app)
+
+    # Database
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     # Routes
     app.register_blueprint(generals)
