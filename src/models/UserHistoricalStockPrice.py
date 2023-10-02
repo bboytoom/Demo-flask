@@ -53,7 +53,7 @@ class UserHistoricalStockPrice(db.Model):
         )
 
     def __repr__(self):
-        return f'UserHistoricalStockPrice({self.uuid}, {self.web_identifier_uuid}, {self.symbol_stock})'
+        return f'UserHistoricalStockPrice({self.web_identifier_uuid}, {self.symbol_stock})'
 
     @classmethod
     def new_price(cls, _data):
@@ -74,6 +74,8 @@ class UserHistoricalStockPrice(db.Model):
                 .filter(and_(UserHistoricalStockPrice.web_identifier_uuid == _web_identifier,
                              UserHistoricalStockPrice.symbol_stock == _symbol)).all()
         except Exception as e:
+            logging.error(f'Search User History error: {e}')
+
             raise
 
     def save(self):
@@ -83,6 +85,6 @@ class UserHistoricalStockPrice(db.Model):
 
             return True
         except Exception as e:
-            logging.error(f'Database error: {e}')
+            logging.error(f'Insert User History error: {e}')
 
             return False

@@ -14,6 +14,7 @@ migrate = Migrate()
 def create_app():
     # Config
     from src.config.sqlalchemy_db import db
+    from src.routes.users import users
     from src.routes.generals import generals
     from src.config.application import config
 
@@ -27,6 +28,7 @@ def create_app():
     migrate.init_app(app, db)
 
     # Routes
+    app.register_blueprint(users)
     app.register_blueprint(generals)
 
     # Routes error

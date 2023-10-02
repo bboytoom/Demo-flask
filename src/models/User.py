@@ -63,6 +63,8 @@ class User(db.Model):
             return db.session.query(User) \
                 .filter(User.web_identifier == _web_identifier).first()
         except Exception as e:
+            logging.error(f'Search User error: {e}')
+
             raise
 
     def save(self):
@@ -72,6 +74,6 @@ class User(db.Model):
 
             return True
         except Exception as e:
-            logging.error(f'Database error: {e}')
+            logging.error(f'Insert User error: {e}')
 
             return False
