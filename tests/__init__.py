@@ -2,7 +2,7 @@ import unittest
 
 from src import create_app
 from src.config.sqlalchemy_db import db
-from tests.factory_test import create_user
+from tests.factory_test import create_user, create_history_price_to_user
 
 
 class BaseTestClass(unittest.TestCase):
@@ -17,11 +17,12 @@ class BaseTestClass(unittest.TestCase):
 
         # Seed
         self.user_seed = create_user()
+        self.history_price_seed = create_history_price_to_user()
 
         # Contest application
         self.app.app_context().push()
-        #db.create_all()
+        db.create_all()
 
     def tearDown(self):
         self.app.app_context().push()
-        #db.drop_all()
+        db.drop_all()

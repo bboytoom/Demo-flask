@@ -1,5 +1,7 @@
 import uuid
+import logging
 
+from sqlalchemy import and_
 from datetime import datetime
 from src.config.sqlalchemy_db import db
 
@@ -13,12 +15,12 @@ class UserHistoricalStockPrice(db.Model):
         unique=True,
         index=True,
         nullable=False,
-        default=uuid.uuid4
+        default=str(uuid.uuid4())
         )
 
-    user_uuid = db.Column(
+    web_identifier_uuid = db.Column(
         db.CHAR(36),
-        db.ForeignKey('users.uuid'),
+        db.ForeignKey('users.web_identifier'),
         index=True,
         nullable=False
         )
@@ -40,15 +42,47 @@ class UserHistoricalStockPrice(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+        default=datetime.now
         )
 
     updated_at = db.Column(
         db.DateTime,
         nullable=False,
-        onupdate=datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S"),
-        default=datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+        onupdate=datetime.now,
+        default=datetime.now
         )
 
     def __repr__(self):
-        return f'UserHistoricalStockPrice({self.uuid}, {self.user_uuid}, {self.symbol_stock})'
+        return f'UserHistoricalStockPrice({self.uuid}, {self.web_identifier_uuid}, {self.symbol_stock})'
+
+    @classmethod
+    def new_price(cls, _data):
+        return UserHistoricalStockPrice(
+            web_identifier_uuid=_data.get('web_identifier_uuid'),
+            symbol_stock=_data.get('symbol_stock'),
+            open_price=_data.get('open_price'),
+            high_price=_data.get('high_price'),
+            low_price=_data.get('low_price'),
+            close_price=_data.get('close_price'),
+            date_stock=_data.get('date_stock'),
+            time_stock=_data.get('time_stock')
+            )
+
+    def search_history_price(_web_identifier, _symbol):
+        try:
+            return db.session.query(UserHistoricalStockPrice) \
+                .filter(and_(UserHistoricalStockPrice.web_identifier_uuid == _web_identifier,
+                             UserHistoricalStockPrice.symbol_stock == _symbol)).all()
+        except Exception as e:
+            raise
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+
+            return True
+        except Exception as e:
+            logging.error(f'Database error: {e}')
+
+            return False
