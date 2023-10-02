@@ -1,5 +1,6 @@
 import enum
 import uuid
+import logging
 
 from datetime import datetime
 from src.config.sqlalchemy_db import db
@@ -19,7 +20,7 @@ class User(db.Model):
         unique=True,
         index=True,
         nullable=False,
-        default=uuid.uuid4
+        default=str(uuid.uuid4())
         )
 
     name = db.Column(db.String(25), nullable=False)
@@ -35,15 +36,42 @@ class User(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+        default=datetime.now
         )
 
     updated_at = db.Column(
         db.DateTime,
         nullable=False,
-        onupdate=datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S"),
-        default=datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+        onupdate=datetime.now,
+        default=datetime.now
         )
 
     def __repr__(self):
         return f'User({self.uuid}, {self.name}, {self.onboarding})'
+
+    @classmethod
+    def new_user(cls, _data):
+        return User(
+            name=_data.get('name'),
+            web_identifier=_data.get('web_identifier'),
+            onboarding=_data.get('onboarding'),
+            status=_data.get('status')
+            )
+
+    def retrieve_user(_web_identifier):
+        try:
+            return db.session.query(User) \
+                .filter(User.web_identifier == _web_identifier).first()
+        except Exception as e:
+            raise
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+
+            return True
+        except Exception as e:
+            logging.error(f'Database error: {e}')
+
+            return False

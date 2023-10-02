@@ -1,4 +1,4 @@
-from . import BaseTestClass
+from .. import BaseTestClass
 from src.helpers.read_csv_from_endpoint import file_data_read_from_csv
 
 

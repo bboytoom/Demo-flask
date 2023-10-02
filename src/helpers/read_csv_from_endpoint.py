@@ -6,7 +6,7 @@ import requests
 from io import StringIO
 
 
-def get_data_from_endpoint(url: str) -> str:
+def get_data_from_endpoint(url: str) -> str | None:
 
     try:
         response = requests.get(url, timeout=5)
