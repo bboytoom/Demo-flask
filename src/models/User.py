@@ -58,10 +58,10 @@ class User(db.Model):
             status=_data.get('status')
             )
 
-    def retrieve_user(_web_identifier):
+    def retrieve_user(_web_identifier: str):
         try:
-            return db.session.query(User) \
-                .filter(User.web_identifier == _web_identifier).first()
+            return db.session.query(User.web_identifier, User.name, User.onboarding) \
+                .filter(User.web_identifier == _web_identifier).first_or_404()
         except Exception as e:
             logging.error(f'Search User error: {e}')
 

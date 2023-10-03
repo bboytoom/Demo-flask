@@ -1,39 +1,31 @@
-from flask import jsonify
+from flask import jsonify, abort, request
 from flask.views import MethodView
+
+from src.models.UserHistoricalStockPrice import UserHistoricalStockPrice
+from src.schemas.stock_history_schema import StockHistorySchema, serializer_history_prices_schema
+from src.helpers.read_csv_from_endpoint import file_data_read_from_csv
+from src.views.decorators.endpoint_validation_body import validator_body
+from src.views.decorators.endpoint_validation_parameters import validate_user_identifier
 
 
 class UsersHistoryStockPrice(MethodView):
 
-    def get(self, identifier):
-        print(identifier)
+    @validate_user_identifier
+    def get(self, user):
+        symbol = request.args.get('symbol_stock', None)
 
-        data = [
-            {
-                'symbol_stock': 'AAPL',
-                'date_stock': '2023-09-29',
-                'time_stock': '22:00:15',
-                'open_price': 172.02,
-                'high_price': 173.07,
-                'low_price': 170.341,
-                'close_price': 171.21
-                }
-            ]
+        prices = UserHistoricalStockPrice.search_history_price(user.web_identifier, symbol)
+        return jsonify(data=serializer_history_prices_schema.dump(prices)), 200
 
-        return jsonify(
-            data=data
-            ), 200
+    @validate_user_identifier
+    @validator_body(StockHistorySchema)
+    def post(self, data, user):
+        symbol_stock = data.get('symbol_stock', None)
 
-    def post(self, identifier):
+        get_stock = file_data_read_from_csv(symbol_stock, user.web_identifier)
+        price = UserHistoricalStockPrice.new_price(get_stock)
 
-        print(identifier)
+        if not price.save():
+            return abort(500, 'Error inserting')
 
-        return jsonify(
-            symbol='AAPL',
-            open=172.02,
-            high=173.07,
-            low=170.341,
-            close=171.21,
-            date_stock='2023-09-29',
-            time_stock='22:00:15',
-            created_at='2023-09-29 22:00:15'
-            ), 201
+        return jsonify(get_stock), 201

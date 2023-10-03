@@ -4,6 +4,7 @@ import logging
 import requests
 
 from io import StringIO
+from src.schemas.stock_history_schema import serializer_price_schema
 
 
 def get_data_from_endpoint(url: str) -> str | None:
@@ -28,8 +29,10 @@ def get_data_from_endpoint(url: str) -> str | None:
     return response.text
 
 
-def file_data_read_from_csv(url: str) -> dict | None:
+def file_data_read_from_csv(symbol: str, identifier: str) -> dict | None:
     result = {}
+    url = f'https://stooq.com/q/l/?s={symbol}.us&f=sd2t2ohlcv&h&e=csv'
+
     get_file = get_data_from_endpoint(url)
 
     if not get_file or 'N/D' in get_file:
@@ -39,15 +42,7 @@ def file_data_read_from_csv(url: str) -> dict | None:
     csv_reader = csv.reader(csv_file)
 
     for value in list(csv_reader)[1:]:
-        result.update({
-            'symbol': value[0],
-            'date': value[1],
-            'time': value[2],
-            'open': value[3],
-            'high': value[4],
-            'low': value[5],
-            'close': value[6],
-            'volume': value[7]
-            })
+        value.append(identifier)
+        result = serializer_price_schema.dump(value)
 
     return result
