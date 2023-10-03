@@ -2,7 +2,7 @@ import uuid
 import logging
 
 from sqlalchemy import and_
-from datetime import datetime
+from datetime import datetime, date, time
 from src.config.sqlalchemy_db import db
 
 
@@ -53,7 +53,7 @@ class UserHistoricalStockPrice(db.Model):
         )
 
     def __repr__(self):
-        return f'UserHistoricalStockPrice({self.uuid}, {self.web_identifier_uuid}, {self.symbol_stock})'
+        return f'UserHistoricalStockPrice({self.web_identifier_uuid}, {self.symbol_stock})'
 
     @classmethod
     def new_price(cls, _data):
@@ -64,16 +64,22 @@ class UserHistoricalStockPrice(db.Model):
             high_price=_data.get('high_price'),
             low_price=_data.get('low_price'),
             close_price=_data.get('close_price'),
-            date_stock=_data.get('date_stock'),
-            time_stock=_data.get('time_stock')
+            date_stock=date.fromisoformat(_data.get('date_stock')),
+            time_stock=time.fromisoformat(_data.get('time_stock'))
             )
 
-    def search_history_price(_web_identifier, _symbol):
+    def search_history_price(_web_identifier: str, _symbol: str = None):
         try:
-            return db.session.query(UserHistoricalStockPrice) \
-                .filter(and_(UserHistoricalStockPrice.web_identifier_uuid == _web_identifier,
-                             UserHistoricalStockPrice.symbol_stock == _symbol)).all()
+            if not _symbol:
+                clause = UserHistoricalStockPrice.web_identifier_uuid == _web_identifier
+            else:
+                clause = and_(UserHistoricalStockPrice.web_identifier_uuid == _web_identifier,
+                              UserHistoricalStockPrice.symbol_stock == 'AAPL')
+
+            return db.session.query(UserHistoricalStockPrice).filter(clause)
         except Exception as e:
+            logging.error(f'Search User History error: {e}')
+
             raise
 
     def save(self):
@@ -83,6 +89,6 @@ class UserHistoricalStockPrice(db.Model):
 
             return True
         except Exception as e:
-            logging.error(f'Database error: {e}')
+            logging.error(f'Insert User History error: {e}')
 
             return False

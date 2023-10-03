@@ -5,15 +5,18 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_marshmallow import Marshmallow
 
 load_dotenv('.env')
 
 migrate = Migrate()
+marshmallow = Marshmallow()
 
 
 def create_app():
     # Config
     from src.config.sqlalchemy_db import db
+    from src.routes.users import users
     from src.routes.generals import generals
     from src.config.application import config
 
@@ -25,8 +28,10 @@ def create_app():
     # Database
     db.init_app(app)
     migrate.init_app(app, db)
+    marshmallow.init_app(app)
 
     # Routes
+    app.register_blueprint(users)
     app.register_blueprint(generals)
 
     # Routes error
