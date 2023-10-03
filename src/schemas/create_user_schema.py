@@ -1,11 +1,13 @@
 import enum
 
+from flask import request
 from marshmallow import Schema, \
     fields, \
     validate, \
     validates, \
     ValidationError, \
-    post_load
+    post_load, \
+    post_dump
 
 
 class TypeOnboarding(enum.Enum):
@@ -17,6 +19,10 @@ class CreateUserSchema(Schema):
 
     class Meta:
         ordered = True
+
+    web_identifier = fields.UUID(
+        required=True
+        )
 
     name = fields.Str(
         required=True,
@@ -43,9 +49,14 @@ class CreateUserSchema(Schema):
 
     @post_load
     def post_load(self, data, **kwargs):
-
         data['web_identifier'] = str(data.get('web_identifier'))
         data['onboarding'] = 'ONBOARDING_STEP_ONE'
+
+        return data
+
+    @post_dump
+    def post_dump(self, data, **kwargs):
+        del data['web_identifier']
 
         return data
 

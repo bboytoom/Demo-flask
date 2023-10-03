@@ -23,9 +23,15 @@ class UsersHistoryStockPrice(MethodView):
         symbol_stock = data.get('symbol_stock', None)
 
         get_stock = file_data_read_from_csv(symbol_stock, user.web_identifier)
+
+        if not get_stock:
+            return {}, 204
+
         price = UserHistoricalStockPrice.new_price(get_stock)
 
         if not price.save():
             return abort(500, 'Error inserting')
+
+        del get_stock['web_identifier_uuid']
 
         return jsonify(get_stock), 201

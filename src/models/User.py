@@ -1,7 +1,7 @@
 import enum
-import uuid
 import logging
 
+from flask import abort
 from datetime import datetime
 from src.config.sqlalchemy_db import db
 
@@ -14,17 +14,14 @@ class TypeOnboarding(enum.Enum):
 class User(db.Model):
     __tablename__ = 'users'
 
-    uuid = db.Column(
+    web_identifier = db.Column(
         db.CHAR(36),
         primary_key=True,
         unique=True,
         index=True,
-        nullable=False,
-        default=str(uuid.uuid4())
-        )
+        nullable=False)
 
     name = db.Column(db.String(25), nullable=False)
-    web_identifier = db.Column(db.String(36), nullable=False)
 
     onboarding = db.Column(
         db.Enum(TypeOnboarding),
@@ -47,7 +44,7 @@ class User(db.Model):
         )
 
     def __repr__(self):
-        return f'User({self.uuid}, {self.name}, {self.onboarding})'
+        return f'User({self.web_identifier}, {self.name}, {self.onboarding})'
 
     @classmethod
     def new_user(cls, _data):
@@ -68,12 +65,5 @@ class User(db.Model):
             raise
 
     def save(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-
-            return True
-        except Exception as e:
-            logging.error(f'Insert User error: {e}')
-
-            return False
+        db.session.add(self)
+        db.session.commit()

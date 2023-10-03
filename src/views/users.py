@@ -1,3 +1,5 @@
+import logging
+
 from flask import jsonify, abort
 from flask.views import MethodView
 
@@ -17,8 +19,15 @@ class Users(MethodView):
     def post(self, data):
         user = User.new_user(data)
 
-        if not user.save():
-            return abort(500, 'Error inserting')
+        try:
+            user.save()
+        except Exception as e:
+            if '1062' in e.args[0]:
+                return abort(409, 'The identifier already exists')
+
+            logging.error(f'Insert User History error: {e}')
+
+            return abort(500, 'Error inserting data')
 
         return jsonify(
             onboarding='ONBOARDING_STEP_TWO'

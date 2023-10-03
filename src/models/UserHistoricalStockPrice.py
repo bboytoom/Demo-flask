@@ -8,6 +8,9 @@ from src.config.sqlalchemy_db import db
 
 class UserHistoricalStockPrice(db.Model):
     __tablename__ = 'users_historical_stock_price'
+    __table_args__ = (
+        db.Index('ix_web_identifier_symbol', 'web_identifier_uuid', 'symbol_stock'),
+        )
 
     uuid = db.Column(
         db.CHAR(36),
@@ -15,7 +18,7 @@ class UserHistoricalStockPrice(db.Model):
         unique=True,
         index=True,
         nullable=False,
-        default=str(uuid.uuid4())
+        default=uuid.uuid4
         )
 
     web_identifier_uuid = db.Column(
@@ -25,14 +28,17 @@ class UserHistoricalStockPrice(db.Model):
         nullable=False
         )
 
-    symbol_stock = db.Column(db.String(20), nullable=False)
+    symbol_stock = db.Column(
+        db.String(20),
+        index=True,
+        nullable=False)
 
-    open_price = db.Column(db.Float(4, 3), default=1)
-    high_price = db.Column(db.Float(4, 3), default=1)
-    low_price = db.Column(db.Float(4, 3), default=1)
-    close_price = db.Column(db.Float(4, 3), default=1)
+    open_price = db.Column(db.Float(4, 3), default=0.0)
+    high_price = db.Column(db.Float(4, 3), default=0.0)
+    low_price = db.Column(db.Float(4, 3), default=0.0)
+    close_price = db.Column(db.Float(4, 3), default=0.0)
 
-    date_stock = db.Column(db.Date, index=True, nullable=False)
+    date_stock = db.Column(db.Date, nullable=False)
 
     time_stock = db.Column(
         db.Time,
@@ -74,7 +80,7 @@ class UserHistoricalStockPrice(db.Model):
                 clause = UserHistoricalStockPrice.web_identifier_uuid == _web_identifier
             else:
                 clause = and_(UserHistoricalStockPrice.web_identifier_uuid == _web_identifier,
-                              UserHistoricalStockPrice.symbol_stock == 'AAPL')
+                              UserHistoricalStockPrice.symbol_stock == _symbol)
 
             return db.session.query(UserHistoricalStockPrice).filter(clause)
         except Exception as e:
