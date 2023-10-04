@@ -1,7 +1,6 @@
 import enum
 import logging
 
-from flask import abort
 from datetime import datetime
 from src.config.sqlalchemy_db import db
 

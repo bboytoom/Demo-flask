@@ -14,7 +14,6 @@ marshmallow = Marshmallow()
 
 
 def create_app():
-    # Config
     from src.config.sqlalchemy_db import db
     from src.routes.users import users
     from src.routes.generals import generals
@@ -40,6 +39,7 @@ def create_app():
     return app
 
 
+# Handle error
 def register_error(app):
     from src.helpers.handler_errors import page_not_found, \
         internal_server_error, \

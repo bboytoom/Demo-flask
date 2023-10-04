@@ -10,13 +10,24 @@ from src.views.decorators.endpoint_validation_parameters import validate_user_id
 
 
 class Users(MethodView):
+    """
+    Endpoint for user information management
+    """
 
     @validate_user_identifier
     def get(self, user):
+        """
+        The endpoint should response the name and state onboarding user
+        """
+
         return jsonify(serializer_user_schema.dump(user)), 200
 
     @validator_body(CreateUserSchema)
     def post(self, data):
+        """
+        The endpoint should receive the identifier that is generate from users's browser
+        """
+
         user = User.new_user(data)
 
         try:
