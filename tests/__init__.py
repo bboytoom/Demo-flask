@@ -7,6 +7,7 @@ from tests.factory_test import create_user, create_history_price_to_user
 
 class BaseTestClass(unittest.TestCase):
 
+    # Code that is executed before each test
     def setUp(self):
         self.app = create_app()
 
@@ -19,10 +20,11 @@ class BaseTestClass(unittest.TestCase):
         self.user_seed = create_user()
         self.history_price_seed = create_history_price_to_user()
 
-        # Contest application
+        # Context application
         self.app.app_context().push()
         db.create_all()
 
+    # Code that is executed after each test
     def tearDown(self):
         self.app.app_context().push()
         db.drop_all()
