@@ -9,9 +9,16 @@ from src.views.decorators.endpoint_validation_parameters import validate_user_id
 
 
 class UsersHistoryStockPrice(MethodView):
+    """
+    The communication endpoint with server-chat and history price endpoint
+    """
 
     @validate_user_identifier
     def get(self, user):
+        """
+        Retrieve the history price and filter history of the prices
+        """
+
         symbol = request.args.get('symbol_stock', None)
 
         prices = UserHistoricalStockPrice.search_history_price(user.web_identifier, symbol)
@@ -20,6 +27,10 @@ class UsersHistoryStockPrice(MethodView):
     @validate_user_identifier
     @validator_body(StockHistorySchema)
     def post(self, data, user):
+        """
+        The main endpoint that interacts with the chatbot
+        """
+
         symbol_stock = data.get('symbol_stock', None)
 
         get_stock = file_data_read_from_csv(symbol_stock, user.web_identifier)

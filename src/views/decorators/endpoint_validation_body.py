@@ -3,6 +3,11 @@ from flask import request, abort
 
 
 def validator_body(schema):
+    """
+    Decorator function that validates the endpoint body.
+    """
+
+    # Sub function
     def validation(func):
         @functools.wraps(func)
         def wrapper(self, *args, **kwargs):

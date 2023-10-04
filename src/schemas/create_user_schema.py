@@ -1,6 +1,5 @@
 import enum
 
-from flask import request
 from marshmallow import Schema, \
     fields, \
     validate, \

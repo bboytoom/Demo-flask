@@ -5,6 +5,10 @@ from src.models.User import User
 
 
 def validate_user_identifier(func):
+    """
+    Decorator function that validates the user identifier.
+    """
+
     @functools.wraps(func)
     def wrapper(self, **kwargs):
         identifier = kwargs.get('identifier', None)
