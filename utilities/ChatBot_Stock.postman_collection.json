@@ -1,0 +1,709 @@
+{
+	"info": {
+		"_postman_id": "561be2fa-c38e-4f40-8c68-7e4e1d75368b",
+		"name": "ChatBot Stock",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10615749"
+	},
+	"item": [
+		{
+			"name": "Retrieve User",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/users/{{web_identifier}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{web_identifier}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Retrieve User",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{web_identifier}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{web_identifier}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Oct 2023 05:48:25 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "61"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"blisa\",\n    \"onboarding\": \"ONBOARDING_STEP_ONE\"\n}"
+				},
+				{
+					"name": "The web identifier does not exist",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/2192021f-6bf4-467c-bc32-8ea258dd058f",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"2192021f-6bf4-467c-bc32-8ea258dd058f"
+							]
+						}
+					},
+					"status": "NOT FOUND",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Oct 2023 05:49:22 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "265"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Not Found\",\n    \"exception\": \"404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.\",\n    \"method\": \"GET\",\n    \"path\": \"/api/v1/users/7142021f-6bf4-467c-bc32-8ea258dd058fa\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create New User",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"web_identifier\": \"7142021f-6bf4-467c-bc32-8ea258dd058f\",\n    \"name\": \"blisa\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/users",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create user",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"web_identifier\": \"7142021f-6bf4-467c-bc32-8ea258dd058f\",\n    \"name\": \"blisa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"status": "CREATED",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Oct 2023 05:29:11 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"onboarding\": \"ONBOARDING_STEP_TWO\"\n}"
+				},
+				{
+					"name": "web_identifiet not valid and name not valid",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"web_identifier\": 1,\n    \"name\": \"a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"status": "UNPROCESSABLE ENTITY",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Oct 2023 05:05:43 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "225"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unprocessable Entity\",\n    \"exception\": {\n        \"name\": [\n            \"Length must be between 2 and 25.\"\n        ],\n        \"web_identifier\": [\n            \"Not a valid UUID.\"\n        ]\n    },\n    \"method\": \"POST\",\n    \"path\": \"/api/v1/users\"\n}"
+				},
+				{
+					"name": "The user identifier already exists",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"web_identifier\": \"7142021f-6bf4-467c-bc32-8ea258dd058f\",\n    \"name\": \"blisa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"status": "CONFLICT",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Oct 2023 05:46:32 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "121"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Conflict\",\n    \"exception\": \"The identifier already exists\",\n    \"method\": \"POST\",\n    \"path\": \"/api/v1/users\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Retrieve User Stock History",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/users/{{web_identifier}}/stock-history",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{web_identifier}}",
+						"stock-history"
+					],
+					"query": [
+						{
+							"key": "symbol_stock",
+							"value": "AAPL",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Witout filter",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{web_identifier}}/stock-history",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{web_identifier}}",
+								"stock-history"
+							],
+							"query": [
+								{
+									"key": "symbol_stock",
+									"value": "AAPL",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Oct 2023 05:29:50 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "240"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        {\n            \"close_price\": 171.21,\n            \"date_stock\": \"2023-09-29\",\n            \"high_price\": 173.07,\n            \"low_price\": 170.341,\n            \"open_price\": 172.02,\n            \"symbol_stock\": \"AAPL\",\n            \"time_stock\": \"22:00:15\"\n        }\n    ]\n}"
+				},
+				{
+					"name": "With filter",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{web_identifier}}/stock-history?symbol_stock=TSLA",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{web_identifier}}",
+								"stock-history"
+							],
+							"query": [
+								{
+									"key": "symbol_stock",
+									"value": "TSLA"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Oct 2023 05:30:17 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "240"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        {\n            \"close_price\": 171.21,\n            \"date_stock\": \"2023-09-29\",\n            \"high_price\": 173.07,\n            \"low_price\": 170.341,\n            \"open_price\": 172.02,\n            \"symbol_stock\": \"AAPL\",\n            \"time_stock\": \"22:00:15\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Insert User Stock History",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"symbol_stock\": \"TSLA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/users/{{web_identifier}}/stock-history",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{web_identifier}}",
+						"stock-history"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Insert User Stock History",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"symbol_stock\": \"AAPL\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{web_identifier}}/stock-history",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{web_identifier}}",
+								"stock-history"
+							]
+						}
+					},
+					"status": "CREATED",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Oct 2023 06:25:32 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "182"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"close_price\": 173.75,\n    \"date_stock\": \"2023-10-02\",\n    \"high_price\": 174.3,\n    \"low_price\": 170.93,\n    \"open_price\": 171.22,\n    \"symbol_stock\": \"AAPL\",\n    \"time_stock\": \"22:00:13\"\n}"
+				},
+				{
+					"name": "The stock does not exists",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"symbol_stock\": \"AAPLdfggfg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{web_identifier}}/stock-history",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{web_identifier}}",
+								"stock-history"
+							]
+						}
+					},
+					"status": "NO CONTENT",
+					"code": 204,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Oct 2023 06:29:10 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Test Url",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/ping",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"ping"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Example 1",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ping",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ping"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.7 Python/3.10.12"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Oct 2023 05:30:57 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "60"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"datetime\": \"2023-10-01 23:30:57\",\n    \"result\": \"pong\"\n}"
+				}
+			]
+		}
+	]
+}
