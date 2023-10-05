@@ -17,7 +17,7 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 [Colección de postman](https://github.com/bboytoom/Chatbot-Stock/blob/develop/utilities/ChatBot_Stock.postman_collection.json)
 
 
-### Instrucciones para el Chatbot
+### Instrucciones para probar el Chatbot
 
 * Clonar el repositorio de Github
 * Ejecuta el siguiente comando para instalar los paquetes
