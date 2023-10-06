@@ -55,3 +55,18 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 **Paquetes utilizados**
 
 * [requirements.txt](https://github.com/bboytoom/Chatbot-Stock/blob/develop/requirements.txt)
+
+**Estructura del proyecto**
+
+* logs: Contiene los registros diarios de errores, warnings e información que quisiéramos registrar.
+* migrations: Contiene las migraciones para realizar cambios en la estructura de las tablas. Ademas, contiene scripts propios del paquete de migraciones que se utiliza.
+* src: Contiene el código fuente del sistema, incluida la función principal donde se ejecuta toda la aplicación.
+    - config: Contiene los archivos de configuración de la base de datos, registros de logs.
+    - helpers: Contiene funcionalidades que se pueden reutilizar dentro de la aplicación, como el script de lectura del CSV.
+    - models: Contiene los modelos de datos de la aplicación necesarios para acceder a la base de datos.
+    - routes: Contiene la definición de las URL´s de la API.
+    - schemas: Contiene la definición de los esquemas de datos que se utilizan para validación y serialización de la data.
+    - views: Contiene clases y/o funciones necesarias para obtener y presentar datos al usuario.
+        - decorators: Contiene decoradores utilizados para validar datos y parámetros de las URL.
+* tests: Contiene las pruebas unitarias y de integración de la aplicación.
+* utilities: Contiene las colecciones de los endpoints, imágenes o otro recurso que necesite el sistema.
