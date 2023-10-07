@@ -3,11 +3,14 @@
 Chatbot Stock es un aplicación web permite a los usuarios consultar los precios de multiples acciones utilizando un símbolo bursátil.
 
 
+
 ## Features
 
 * Obtener el precio de las acciones del mercado de valores a través de una interfaz web
 * Generar un historial de los precios consultados por el usuario
 * Gráficos de la variación de los precios
+
+
 
 ### WIKI
 [Documento de requerimientos](https://github.com/bboytoom/Chatbot-Stock/wiki/Documento-de-requerimientos)
@@ -15,6 +18,7 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 [Documento de arquitectura](https://github.com/bboytoom/Chatbot-Stock/wiki/Documento-de-arquitectura)
 
 [Colección de postman](https://github.com/bboytoom/Chatbot-Stock/blob/develop/utilities/ChatBot_Stock.postman_collection.json)
+
 
 
 ### Instrucciones para probar el Chatbot
@@ -40,10 +44,12 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
     - La colección de postman se encuentra en la carpeta de utilidades del proyecto
 
 
+
 ## Desarrollado con
 
 * Python
 * Mysql
+
 
 
 ### Librerias principales
@@ -52,11 +58,14 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 * SQLAlchemy
 * Marshmallow
 
+
 **Paquetes utilizados**
 
 * [requirements.txt](https://github.com/bboytoom/Chatbot-Stock/blob/develop/requirements.txt)
 
-**Estructura del proyecto**
+
+
+## Estructura del proyecto
 
 * logs: Contiene los registros diarios de errores, warnings e información que quisiéramos registrar.
 * migrations: Contiene las migraciones para realizar cambios en la estructura de las tablas. Ademas, contiene scripts propios del paquete de migraciones que se utiliza.

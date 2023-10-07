@@ -1,7 +1,7 @@
-from .. import BaseTestClass
+from tests import BaseTestClass
 
 
-class TestUnitExample(BaseTestClass):
+class TestIntegrationExample(BaseTestClass):
 
     def test_example(self):
         self.assertTrue(True)
