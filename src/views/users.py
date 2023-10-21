@@ -33,7 +33,7 @@ class Users(MethodView):
         try:
             user.save()
         except Exception as e:
-            if '1062' in e.args[0]:
+            if 'Duplicated data in database' in e.args[0]:
                 return abort(409, 'The identifier already exists')
 
             logging.error(f'Insert User History error: {e}')

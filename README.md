@@ -12,7 +12,8 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 
 
 
-### WIKI
+## WIKI
+
 [Documento de requerimientos](https://github.com/bboytoom/Chatbot-Stock/wiki/Documento-de-requerimientos)
 
 [Documento de arquitectura](https://github.com/bboytoom/Chatbot-Stock/wiki/Documento-de-arquitectura)
@@ -21,7 +22,7 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 
 
 
-### Instrucciones para probar el Chatbot
+## Instrucciones para probar el Chatbot
 
 * Clonar el repositorio de Github
 * Ejecuta el siguiente comando para instalar los paquetes
@@ -52,16 +53,11 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 
 
 
-### Librerias principales
+#### Librerias principales
 
 * Flask
 * SQLAlchemy
 * Marshmallow
-
-
-**Paquetes utilizados**
-
-* [requirements.txt](https://github.com/bboytoom/Chatbot-Stock/blob/develop/requirements.txt)
 
 
 
