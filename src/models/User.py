@@ -2,7 +2,13 @@ import enum
 import logging
 
 from datetime import datetime
+from sqlalchemy.orm import validates
+from sqlalchemy.exc import NoResultFound, \
+    IntegrityError, \
+    DataError
+
 from src.config.sqlalchemy_db import db
+from src.helpers.validations_for_functions import validate_uuid
 
 
 class TypeOnboarding(enum.Enum):
@@ -24,7 +30,8 @@ class User(db.Model):
 
     onboarding = db.Column(
         db.Enum(TypeOnboarding),
-        nullable=False
+        nullable=False,
+        default=TypeOnboarding.ONBOARDING_STEP_ONE.value,
         )
 
     status = db.Column(db.Boolean, default=True)
@@ -45,8 +52,31 @@ class User(db.Model):
     def __repr__(self):
         return f'User({self.web_identifier}, {self.name}, {self.onboarding})'
 
+    @validates('web_identifier')
+    def validate_web_identifier(self, key: str, _value: str):
+        if not _value:
+            raise ValueError('The web_identifier is empty')
+
+        if not validate_uuid(_value):
+            raise ValueError('The web_identifier does not uuid')
+
+        return _value
+
+    @validates('name')
+    def validate_name(self, _key: str, _value: str):
+        if not _value:
+            raise ValueError('The name is empty')
+
+        if len(_value) <= 2 or len(_value) >= 25:
+            raise ValueError('The name must be between 2 to 25 characters')
+
+        return _value
+
     @classmethod
-    def new_user(cls, _data):
+    def new_user(cls, _data: dict):
+        if len(_data) == 0:
+            raise NoResultFound('The model is empty')
+
         return User(
             name=_data.get('name'),
             web_identifier=_data.get('web_identifier'),
@@ -64,5 +94,17 @@ class User(db.Model):
             raise
 
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+
+            return self
+        except IntegrityError as err:
+            logging.error(f'Duplicated data : {err}')
+            raise TypeError('Duplicated data in database')
+        except DataError as err:
+            logging.error(f'Error was inserted data : {err}')
+
+            db.session.rollback()
+
+            raise TypeError('Data error was inserted')

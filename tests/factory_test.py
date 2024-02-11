@@ -31,3 +31,10 @@ def create_history_price_to_user() -> dict:
         'time_stock': time.fromisoformat('22:00:15'),
         'date_stock': date.fromisoformat('2023-09-29')
         }
+
+
+def payload_create_new_user() -> dict:
+    return {
+        'web_identifier': str(uuid.uuid4()),
+        'name': fake.first_name()
+        }
