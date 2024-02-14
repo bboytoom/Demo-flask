@@ -1,3 +1,4 @@
+from src.models.User import User
 from tests import BaseTestClass
 
 url = '/api/v1/users'
@@ -8,9 +9,14 @@ class TestCreateNewUserEndpoint(BaseTestClass):
 
     def test_create_new_user_success(self):
         response = self.api.post(url,  headers=headers, json=self.seed_payloads_new_user)
+        result = response.get_json()
+
+        user_exists = self.db_connection.session.query(User)\
+            .filter(User.uuid == result.get('user_uuid'))\
+            .first()
 
         self.assertEqual(response.status_code, 201)
-        self.assertDictEqual(response.get_json(), {'onboarding': 'ONBOARDING_STEP_TWO'})
+        self.assertEqual(user_exists.uuid, result.get('user_uuid'))
 
     def test_create_new_user_duplicate(self):
         data = self.seed_payloads_new_user

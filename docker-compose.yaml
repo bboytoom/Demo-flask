@@ -11,8 +11,6 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - $PWD/database:/var/lib/mysql
     ports:
       - '3306:3306'
     networks:
@@ -20,6 +18,8 @@ services:
 
   backend-app:
     container_name: backend-app
+    depends_on:
+      - database-host
     build: .
     ports:
       - '5000:5000'
@@ -29,7 +29,6 @@ services:
       - $PWD:/app
     networks:
       - net
-    command: /bin/bash -c "chmod +x /app/utilities/scripts/execute_migration.sh && /app/utilities/scripts/execute_migration.sh"
 
 networks:
   net:

@@ -1,6 +1,4 @@
-# ChatBot Stock
-
-Chatbot Stock es un aplicación web permite a los usuarios consultar los precios de multiples acciones utilizando un símbolo bursátil.
+Es un aplicación web permite a los usuarios consultar los precios de multiples acciones utilizando un símbolo bursátil.
 
 
 
@@ -14,15 +12,11 @@ Chatbot Stock es un aplicación web permite a los usuarios consultar los precios
 
 ## WIKI
 
-[Documento de requerimientos](https://github.com/bboytoom/Chatbot-Stock/wiki/Documento-de-requerimientos)
-
-[Documento de arquitectura](https://github.com/bboytoom/Chatbot-Stock/wiki/Documento-de-arquitectura)
-
 [Colección de postman](https://github.com/bboytoom/Chatbot-Stock/blob/develop/utilities/ChatBot_Stock.postman_collection.json)
 
 
 
-## Instrucciones para probar el Chatbot
+## Instrucciones para probar el bot
 
 * Clonar el repositorio de Github
 * Ejecuta el siguiente comando para instalar los paquetes

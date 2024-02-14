@@ -12,7 +12,7 @@ class BaseTestClass(unittest.TestCase):
     # Code that is executed before each test
     def setUp(self):
         self.app = create_app()
-
+        self.db_connection = db
         # Api
         self.api = self.app.test_client()
 
@@ -27,5 +27,9 @@ class BaseTestClass(unittest.TestCase):
 
     # Code that is executed after each test
     def tearDown(self):
-        self.app.app_context().push()
-        db.drop_all()
+        try:
+            db.session.remove()
+            db.drop_all()
+        except Exception as e:
+            print(f"Error en tearDown: {str(e)}")
+

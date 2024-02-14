@@ -8,9 +8,9 @@ from src.config.sqlalchemy_db import db
 
 class UserHistoricalStockPrice(db.Model):
     __tablename__ = 'users_historical_stock_price'
-    __table_args__ = (
+    """__table_args__ = (
         db.Index('ix_web_identifier_symbol', 'web_identifier_uuid', 'symbol_stock'),
-        )
+        )"""
 
     uuid = db.Column(
         db.CHAR(36),
@@ -23,7 +23,7 @@ class UserHistoricalStockPrice(db.Model):
 
     web_identifier_uuid = db.Column(
         db.CHAR(36),
-        db.ForeignKey('users.web_identifier'),
+        #db.ForeignKey('users.web_identifier'),
         index=True,
         nullable=False
         )

@@ -1,4 +1,4 @@
-import enum
+import uuid
 import logging
 
 from datetime import datetime
@@ -8,32 +8,29 @@ from sqlalchemy.exc import NoResultFound, \
     DataError
 
 from src.config.sqlalchemy_db import db
-from src.helpers.validations_for_functions import validate_uuid
-
-
-class TypeOnboarding(enum.Enum):
-    ONBOARDING_STEP_ONE = 'ONBOARDING_STEP_ONE'
-    ONBOARDING_STEP_TWO = 'ONBOARDING_STEP_TWO'
 
 
 class User(db.Model):
     __tablename__ = 'users'
 
-    web_identifier = db.Column(
+    uuid = db.Column(
         db.CHAR(36),
         primary_key=True,
         unique=True,
         index=True,
-        nullable=False)
-
-    name = db.Column(db.String(25), nullable=False)
-
-    onboarding = db.Column(
-        db.Enum(TypeOnboarding),
         nullable=False,
-        default=TypeOnboarding.ONBOARDING_STEP_ONE.value,
+        default=uuid.uuid4
         )
 
+    web_identifier = db.Column(
+        db.CHAR(36),
+        unique=True,
+        index=True,
+        nullable=False)
+
+    name = db.Column(db.String(30), nullable=False)
+    last_name = db.Column(db.String(70), nullable=False)
+    birth_day = db.Column(db.Date, nullable=True)
     status = db.Column(db.Boolean, default=True)
 
     created_at = db.Column(
@@ -50,14 +47,14 @@ class User(db.Model):
         )
 
     def __repr__(self):
-        return f'User({self.web_identifier}, {self.name}, {self.onboarding})'
+        return f'User({self.web_identifier}, {self.name}, {self.last_name})'
 
     @validates('web_identifier')
     def validate_web_identifier(self, key: str, _value: str):
         if not _value:
             raise ValueError('The web_identifier is empty')
 
-        if not validate_uuid(_value):
+        if not isinstance(_value, uuid.UUID):
             raise ValueError('The web_identifier does not uuid')
 
         return _value
@@ -67,8 +64,18 @@ class User(db.Model):
         if not _value:
             raise ValueError('The name is empty')
 
-        if len(_value) <= 2 or len(_value) >= 25:
-            raise ValueError('The name must be between 2 to 25 characters')
+        if len(_value) <= 2 or len(_value) >= 30:
+            raise ValueError('The name must be between 2 to 30 characters')
+
+        return _value
+
+    @validates('last_name')
+    def validate_last_name(self, _key: str, _value: str):
+        if not _value:
+            raise ValueError('The last_name is empty')
+
+        if len(_value) <= 2 or len(_value) >= 70:
+            raise ValueError('The last_name must be between 2 to 30 characters')
 
         return _value
 
@@ -78,9 +85,10 @@ class User(db.Model):
             raise NoResultFound('The model is empty')
 
         return User(
-            name=_data.get('name'),
             web_identifier=_data.get('web_identifier'),
-            onboarding=_data.get('onboarding'),
+            name=_data.get('name'),
+            last_name=_data.get('last_name'),
+            birth_day=_data.get('birth_day'),
             status=_data.get('status')
             )
 
