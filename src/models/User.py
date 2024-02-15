@@ -75,7 +75,7 @@ class User(db.Model):
             raise ValueError('The last_name is empty')
 
         if len(_value) <= 2 or len(_value) >= 70:
-            raise ValueError('The last_name must be between 2 to 30 characters')
+            raise ValueError('The last_name must be between 2 to 70 characters')
 
         return _value
 
@@ -92,10 +92,17 @@ class User(db.Model):
             status=_data.get('status')
             )
 
-    def retrieve_user(_web_identifier: str):
+    def retrieve_user(_web_identifier: str, exception: bool = True):
         try:
-            return db.session.query(User.web_identifier, User.name, User.onboarding) \
-                .filter(User.web_identifier == _web_identifier).first_or_404()
+            user = db.session.query(User) \
+                .filter(User.web_identifier == _web_identifier)
+
+            if exception:
+                result = user.first_or_404()
+            else:
+                result = user.first()
+
+            return result
         except Exception as e:
             logging.error(f'Search User error: {e}')
 

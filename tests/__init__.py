@@ -32,4 +32,3 @@ class BaseTestClass(unittest.TestCase):
             db.drop_all()
         except Exception as e:
             print(f"Error en tearDown: {str(e)}")
-
