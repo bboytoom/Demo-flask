@@ -2,12 +2,14 @@ import unittest
 
 from src import create_app
 from src.config.sqlalchemy_db import db
+from tests.custom_asserts import CustomAsserts
+
 from tests.factory_test import create_user, \
     create_history_price_to_user, \
     payload_create_new_user
 
 
-class BaseTestClass(unittest.TestCase):
+class BaseTestClass(unittest.TestCase, CustomAsserts):
 
     # Code that is executed before each test
     def setUp(self):

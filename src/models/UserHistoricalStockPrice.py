@@ -23,7 +23,7 @@ class UserHistoricalStockPrice(db.Model):
 
     web_identifier_uuid = db.Column(
         db.CHAR(36),
-        #db.ForeignKey('users.web_identifier'),
+        # db.ForeignKey('users.web_identifier'),
         index=True,
         nullable=False
         )

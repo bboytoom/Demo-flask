@@ -30,5 +30,6 @@ class Users(MethodView):
             return abort(500, 'Error inserting data')
 
         return jsonify(
+            message='Successful request',
             user_uuid=user.uuid
             ), 201

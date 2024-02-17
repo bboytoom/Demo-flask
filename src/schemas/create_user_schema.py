@@ -53,7 +53,7 @@ class CreateUserSchema(Schema):
         search_web_identifier = User.retrieve_user(str(value), False)
 
         if search_web_identifier:
-            raise ValidationError('web_identifier must be unique')
+            raise ValidationError('The web_identifier must be unique.')
 
         return value
 
