@@ -35,6 +35,8 @@ def create_history_price_to_user() -> dict:
 
 def payload_create_new_user() -> dict:
     return {
-        'web_identifier': str(uuid.uuid4()),
-        'name': fake.first_name()
+        'web_identifier': uuid.uuid4(),
+        'name': fake.first_name(),
+        'last_name': fake.last_name(),
+        'birth_day': str(fake.date_of_birth(minimum_age=18))
         }

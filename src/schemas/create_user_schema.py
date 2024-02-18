@@ -1,17 +1,10 @@
-import enum
-
 from marshmallow import Schema, \
     fields, \
     validate, \
     validates, \
-    ValidationError, \
-    post_load, \
-    post_dump
+    ValidationError
 
-
-class TypeOnboarding(enum.Enum):
-    ONBOARDING_STEP_ONE = 'ONBOARDING_STEP_ONE'
-    ONBOARDING_STEP_TWO = 'ONBOARDING_STEP_TWO'
+from src.models.User import User
 
 
 class CreateUserSchema(Schema):
@@ -26,17 +19,18 @@ class CreateUserSchema(Schema):
     name = fields.Str(
         required=True,
         validate=[
-            validate.Length(min=2, max=25)
+            validate.Length(min=2, max=30)
             ]
         )
 
-    onboarding = fields.Enum(
-        TypeOnboarding,
-        validate=validate.OneOf([
-            'ONBOARDING_STEP_ONE',
-            'ONBOARDING_STEP_TWO'
-            ])
+    last_name = fields.Str(
+        required=True,
+        validate=[
+            validate.Length(min=2, max=70)
+            ]
         )
+
+    birth_day = fields.Date('%Y-%m-%d')
 
     @validates('name')
     def is_valid_name(self, value):
@@ -46,18 +40,22 @@ class CreateUserSchema(Schema):
 
         raise ValidationError('The name is invalid')
 
-    @post_load
-    def post_load(self, data, **kwargs):
-        data['web_identifier'] = str(data.get('web_identifier'))
-        data['onboarding'] = 'ONBOARDING_STEP_ONE'
+    @validates('last_name')
+    def is_valid_last_name(self, value):
 
-        return data
+        if value.isalnum():
+            return value
 
-    @post_dump
-    def post_dump(self, data, **kwargs):
-        del data['web_identifier']
+        raise ValidationError('The last_name is invalid')
 
-        return data
+    @validates('web_identifier')
+    def is_unique_web_identifier(self, value):
+        search_web_identifier = User.retrieve_user(str(value), False)
+
+        if search_web_identifier:
+            raise ValidationError('The web_identifier must be unique.')
+
+        return value
 
 
 serializer_user_schema = CreateUserSchema()

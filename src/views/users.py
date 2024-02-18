@@ -16,30 +16,20 @@ class Users(MethodView):
 
     @validate_user_identifier
     def get(self, user):
-        """
-        The endpoint should response the name and state onboarding user
-        """
-
         return jsonify(serializer_user_schema.dump(user)), 200
 
     @validator_body(CreateUserSchema)
     def post(self, data):
-        """
-        The endpoint should receive the identifier that is generate from users's browser
-        """
-
         user = User.new_user(data)
 
         try:
             user.save()
         except Exception as e:
-            if 'Duplicated data in database' in e.args[0]:
-                return abort(409, 'The identifier already exists')
-
             logging.error(f'Insert User History error: {e}')
 
             return abort(500, 'Error inserting data')
 
         return jsonify(
-            onboarding='ONBOARDING_STEP_TWO'
+            message='Successful request',
+            user_uuid=user.uuid
             ), 201
