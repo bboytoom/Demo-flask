@@ -4,8 +4,7 @@ from src import create_app
 from src.config.sqlalchemy_db import db
 from tests.custom_asserts import CustomAsserts
 
-from tests.factory_test import create_user, \
-    create_history_price_to_user, \
+from tests.factory_test import create_history_price_to_user, \
     payload_create_new_user
 
 
@@ -19,7 +18,6 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
         self.api = self.app.test_client()
 
         # Seed
-        self.user_seed = create_user()
         self.history_price_seed = create_history_price_to_user()
         self.seed_payloads_new_user = payload_create_new_user()
 

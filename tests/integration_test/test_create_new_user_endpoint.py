@@ -33,47 +33,12 @@ class TestCreateNewUserEndpoint(BaseTestClass):
         self.assert_json_response(response, 'Successful request', 201, None)
         self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
 
-    def test_create_new_user_duplicate(self):
-        arrange = {
-            'web_identifier': uuid.UUID('ecbe0d85-38ec-4b8c-ad90-76146804d9df'),
-            'name': 'test',
-            'last_name': 'Chapman',
-            'birth_day': '1944-10-19',
-            'status': True
-            }
-
-        expected_exceptions = {
-            'web_identifier': ['The web_identifier must be unique.']
-            }
-
-        user = User.new_user(arrange)
-        user.save()
-
-        arrange.pop('status')
-        response = self.api.post(url,  headers=headers, json=arrange)
-
-        self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
-
     def test_create_new_user_empty_data(self):
         fail_payload = {}
 
         expected_exceptions = {
             'last_name': ['Missing data for required field.'],
-            'name': ['Missing data for required field.'],
-            'web_identifier': ['Missing data for required field.']
-            }
-
-        response = self.api.post(url,  headers=headers, json=fail_payload)
-        self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
-
-    def test_create_new_user_web_identifier_no_valid(self):
-        fail_payload = self.seed_payloads_new_user
-        fail_payload.update({
-            'web_identifier': 123
-            })
-
-        expected_exceptions = {
-            'web_identifier': ['Not a valid UUID.']
+            'name': ['Missing data for required field.']
             }
 
         response = self.api.post(url,  headers=headers, json=fail_payload)

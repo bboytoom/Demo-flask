@@ -1,24 +1,7 @@
-import uuid
-
 from faker import Faker
-from random import choice
 from datetime import date, time
 
 fake = Faker()
-
-client_uuid_array = [
-    'ONBOARDING_STEP_ONE',
-    'ONBOARDING_STEP_TWO'
-    ]
-
-
-def create_user() -> dict:
-    return {
-        'name': fake.name(),
-        'web_identifier': str(uuid.uuid4()),
-        'onboarding': choice(client_uuid_array),
-        'status': True
-        }
 
 
 def create_history_price_to_user() -> dict:
@@ -35,7 +18,6 @@ def create_history_price_to_user() -> dict:
 
 def payload_create_new_user() -> dict:
     return {
-        'web_identifier': uuid.uuid4(),
         'name': fake.first_name(),
         'last_name': fake.last_name(),
         'birth_day': str(fake.date_of_birth(minimum_age=18))
