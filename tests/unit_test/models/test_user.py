@@ -1,5 +1,5 @@
 from tests import BaseTestClass
-from src.models.User import User
+from src.models.user import User
 
 
 class TestUser(BaseTestClass):

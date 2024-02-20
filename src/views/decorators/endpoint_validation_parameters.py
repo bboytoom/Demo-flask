@@ -1,7 +1,7 @@
 import functools
 
 from flask import abort
-from src.models.User import User
+from src.models.user import User
 
 
 def validate_user_identifier(func):

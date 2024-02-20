@@ -3,7 +3,7 @@ import logging
 from flask import jsonify, abort
 from flask.views import MethodView
 
-from src.models.User import User
+from src.models.user import User
 from src.views.decorators.endpoint_validation_body import validator_body
 from src.views.decorators.endpoint_validation_parameters import validate_user_identifier
 

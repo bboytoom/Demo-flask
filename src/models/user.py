@@ -2,7 +2,9 @@ import uuid
 import logging
 
 from datetime import datetime
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import relationship, \
+    validates
+
 from sqlalchemy.exc import NoResultFound, \
     IntegrityError, \
     DataError
@@ -19,8 +21,7 @@ class User(db.Model):
         unique=True,
         index=True,
         nullable=False,
-        default=uuid.uuid4
-        )
+        default=uuid.uuid4)
 
     name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(70), nullable=False)
@@ -30,15 +31,19 @@ class User(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.now
-        )
+        default=datetime.now)
 
     updated_at = db.Column(
         db.DateTime,
         nullable=False,
         onupdate=datetime.now,
-        default=datetime.now
-        )
+        default=datetime.now)
+
+    user_stock_symbol = relationship(
+        'UserStockSymbol',
+        cascade="all, delete",
+        passive_deletes=True,
+        back_populates='User')
 
     def __repr__(self):
         return f'User({self.uuid}, {self.name}, {self.last_name})'
@@ -72,8 +77,7 @@ class User(db.Model):
             name=_data.get('name'),
             last_name=_data.get('last_name'),
             birth_day=_data.get('birth_day'),
-            status=_data.get('status')
-            )
+            status=_data.get('status'))
 
     def retrieve_user(_uuid: str, exception: bool = True):
         try:

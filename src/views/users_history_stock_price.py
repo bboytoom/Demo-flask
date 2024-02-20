@@ -1,7 +1,7 @@
 from flask import jsonify, abort, request
 from flask.views import MethodView
 
-from src.models.UserHistoricalStockPrice import UserHistoricalStockPrice
+from src.models.historical_stock_price import HistoricalStockPrice
 from src.schemas.stock_history_schema import StockHistorySchema, serializer_history_prices_schema
 from src.helpers.read_csv_from_endpoint import file_data_read_from_csv
 from src.views.decorators.endpoint_validation_body import validator_body
@@ -21,7 +21,7 @@ class UsersHistoryStockPrice(MethodView):
 
         symbol = request.args.get('symbol_stock', None)
 
-        prices = UserHistoricalStockPrice.search_history_price(user.web_identifier, symbol)
+        prices = HistoricalStockPrice.search_history_price(user.web_identifier, symbol)
         return jsonify(data=serializer_history_prices_schema.dump(prices)), 200
 
     @validate_user_identifier
@@ -38,7 +38,7 @@ class UsersHistoryStockPrice(MethodView):
         if not get_stock:
             return {}, 204
 
-        price = UserHistoricalStockPrice.new_price(get_stock)
+        price = HistoricalStockPrice.new_price(get_stock)
 
         if not price.save():
             return abort(500, 'Error inserting')

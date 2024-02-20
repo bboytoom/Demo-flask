@@ -1,5 +1,4 @@
-import uuid
-from src.models.User import User
+from src.models.user import User
 from tests import BaseTestClass
 
 url = '/api/v1/users'
