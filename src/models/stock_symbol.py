@@ -19,6 +19,8 @@ from src.models.user_stock_symbol import UserStockSymbol
 
 class StockSymbol(db.Model):
     __tablename__ = 'stock_symbol'
+    __table_args__ = (
+        db.PrimaryKeyConstraint('uuid'),)
 
     uuid: Mapped[str] = mapped_column(
         db.CHAR(36),
@@ -35,6 +37,7 @@ class StockSymbol(db.Model):
     symbol = db.Column(
         db.String(20),
         index=True,
+        unique=True,
         nullable=False)
 
     status = db.Column(db.Boolean, default=True)

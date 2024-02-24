@@ -19,6 +19,7 @@ from src.models.stock_symbol import StockSymbol
 class HistoricalStockPrice(db.Model):
     __tablename__ = 'historical_stock_price'
     __table_args__ = (
+        db.PrimaryKeyConstraint('uuid'),
         db.Index('ix_stock_symbol_date_stock', 'stock_symbol_uuid', 'date_stock'),)
 
     uuid: Mapped[str] = mapped_column(
