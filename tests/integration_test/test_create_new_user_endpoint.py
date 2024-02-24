@@ -18,7 +18,7 @@ class TestCreateNewUserEndpoint(BaseTestClass):
         self.assert_json_response(response, 'Successful request', 201, None)
         self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
 
-    def test_create_new_user_success_without_birth_day(self):
+    def test_create_new_user_without_birth_day(self):
         arrange = self.seed_payloads_new_user
         arrange.pop('birth_day')
 

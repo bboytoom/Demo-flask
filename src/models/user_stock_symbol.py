@@ -2,8 +2,9 @@ import uuid
 import logging
 
 from datetime import datetime
-from sqlalchemy import UniqueConstraint
-from sqlalchemy.orm import relationship, \
+from sqlalchemy.orm import Mapped, \
+    mapped_column, \
+    relationship, \
     validates
 
 from sqlalchemy.exc import NoResultFound, \
@@ -17,9 +18,9 @@ class UserStockSymbol(db.Model):
     __tablename__ = 'user_stock_symbol'
     __table_args__ = (
         db.Index('ix_user_stock_symbol', 'user_uuid', 'stock_symbol_uuid'),
-        UniqueConstraint('user_uuid', 'stock_symbol_uuid', name='uq_user_stock_symbol'))
+        db.UniqueConstraint('user_uuid', 'stock_symbol_uuid', name='uq_user_stock_symbol'))
 
-    uuid = db.Column(
+    uuid: Mapped[str] = mapped_column(
         db.CHAR(36),
         primary_key=True,
         unique=True,
@@ -27,28 +28,22 @@ class UserStockSymbol(db.Model):
         nullable=False,
         default=uuid.uuid4)
 
-    user_uuid = db.Column(
+    user_uuid: Mapped[str] = mapped_column(
         db.CHAR(36),
         db.ForeignKey('users.uuid', ondelete='CASCADE'),
         index=True,
-        nullable=False
-        )
+        nullable=False)
 
-    stock_symbol_uuid = db.Column(
+    stock_symbol_uuid = mapped_column(
         db.CHAR(36),
         db.ForeignKey('stock_symbol.uuid', ondelete='CASCADE'),
         index=True,
-        nullable=False
-        )
+        nullable=False)
 
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.now
-        )
-
-    users = relationship('User', back_populates='UserStockSymbol')
-    stock_symbol = relationship('StockSymbol', back_populates='UserStockSymbol')
+        default=datetime.now)
 
     def __repr__(self):
         return f'UserStockSymbol({self.uuid}, {self.user_uuid}, {self.stock_symbol_uuid})'

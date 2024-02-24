@@ -2,7 +2,11 @@ import uuid
 import logging
 
 from datetime import datetime
-from sqlalchemy.orm import relationship, \
+from typing import List
+
+from sqlalchemy.orm import Mapped, \
+    mapped_column, \
+    relationship, \
     validates
 
 from sqlalchemy.exc import NoResultFound, \
@@ -10,12 +14,13 @@ from sqlalchemy.exc import NoResultFound, \
     DataError
 
 from src.config.sqlalchemy_db import db
+from src.models.user_stock_symbol import UserStockSymbol
 
 
 class User(db.Model):
     __tablename__ = 'users'
 
-    uuid = db.Column(
+    uuid: Mapped[str] = mapped_column(
         db.CHAR(36),
         primary_key=True,
         unique=True,
@@ -39,11 +44,9 @@ class User(db.Model):
         onupdate=datetime.now,
         default=datetime.now)
 
-    user_stock_symbol = relationship(
-        'UserStockSymbol',
+    _user_stock_symbol: Mapped[List[UserStockSymbol]] = relationship(
         cascade="all, delete",
-        passive_deletes=True,
-        back_populates='User')
+        passive_deletes=True)
 
     def __repr__(self):
         return f'User({self.uuid}, {self.name}, {self.last_name})'

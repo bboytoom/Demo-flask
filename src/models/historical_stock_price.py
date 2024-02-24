@@ -2,37 +2,38 @@ import uuid
 import logging
 
 from datetime import datetime
-from sqlalchemy.orm import relationship, \
+from sqlalchemy.orm import Mapped, \
+    mapped_column, \
+    relationship, \
     validates
+
 
 from sqlalchemy.exc import NoResultFound, \
     IntegrityError, \
     DataError
 
 from src.config.sqlalchemy_db import db
+from src.models.stock_symbol import StockSymbol
 
 
 class HistoricalStockPrice(db.Model):
     __tablename__ = 'historical_stock_price'
     __table_args__ = (
-        db.Index('ix_stock_symbol_date_stock', 'stock_symbol_uuid', 'date_stock'),
-        )
+        db.Index('ix_stock_symbol_date_stock', 'stock_symbol_uuid', 'date_stock'),)
 
-    uuid = db.Column(
+    uuid: Mapped[str] = mapped_column(
         db.CHAR(36),
         primary_key=True,
         unique=True,
         index=True,
         nullable=False,
-        default=uuid.uuid4
-        )
+        default=uuid.uuid4)
 
-    stock_symbol_uuid = db.Column(
+    stock_symbol_uuid: Mapped[str] = mapped_column(
         db.CHAR(36),
         db.ForeignKey('stock_symbol.uuid', ondelete='CASCADE'),
         index=True,
-        nullable=False
-        )
+        nullable=False)
 
     open_price = db.Column(db.Float(4, 3), default=0.0)
     high_price = db.Column(db.Float(4, 3), default=0.0)
@@ -46,16 +47,14 @@ class HistoricalStockPrice(db.Model):
 
     time_stock = db.Column(
         db.Time,
-        nullable=True
-        )
+        nullable=True)
 
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.now
-        )
+        default=datetime.now)
 
-    stock_symbol = relationship('StockSymbol', back_populates='HistoricalStockPrice')
+    _stock_symbol: Mapped[StockSymbol] = relationship()
 
     def __repr__(self):
         return f'HistoricalStockPrice({self.uuid}, {self.stock_symbol_uuid})'
