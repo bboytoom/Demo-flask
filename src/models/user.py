@@ -2,19 +2,11 @@ import uuid
 import logging
 
 from datetime import datetime
-from typing import List
-
-from sqlalchemy.orm import Mapped, \
-    mapped_column, \
-    relationship, \
-    validates
-
-from sqlalchemy.exc import NoResultFound, \
-    IntegrityError, \
-    DataError
 
 from src.config.sqlalchemy_db import db
-from src.models.user_stock_symbol import UserStockSymbol
+
+from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
 
 class User(db.Model):
@@ -45,10 +37,6 @@ class User(db.Model):
         nullable=False,
         onupdate=datetime.now,
         default=datetime.now)
-
-    _user_stock_symbol: Mapped[List[UserStockSymbol]] = relationship(
-        cascade="all, delete",
-        passive_deletes=True)
 
     def __repr__(self):
         return f'User({self.uuid}, {self.name}, {self.last_name})'
@@ -83,21 +71,6 @@ class User(db.Model):
             last_name=_data.get('last_name'),
             birth_day=_data.get('birth_day'),
             status=_data.get('status'))
-
-    def retrieve_user(_uuid: str, exception: bool = True):
-        try:
-            user = db.session.query(User).filter(User.uuid == _uuid)
-
-            if exception:
-                result = user.first_or_404()
-            else:
-                result = user.first()
-
-            return result
-        except Exception as e:
-            logging.error(f'Search User error: {e}')
-
-            raise
 
     def save(self):
         try:

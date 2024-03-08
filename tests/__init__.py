@@ -3,9 +3,7 @@ import unittest
 from src import create_app
 from src.config.sqlalchemy_db import db
 from tests.custom_asserts import CustomAsserts
-
-from tests.factory_test import create_history_price_to_user, \
-    payload_create_new_user
+from tests.factory_test import create_history_price_to_user, payload_create_new_user
 
 
 class BaseTestClass(unittest.TestCase, CustomAsserts):
@@ -14,6 +12,7 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
     def setUp(self):
         self.app = create_app()
         self.db_connection = db
+
         # Api
         self.api = self.app.test_client()
 

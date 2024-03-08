@@ -2,18 +2,11 @@ import uuid
 import logging
 
 from datetime import datetime
-from sqlalchemy.orm import Mapped, \
-    mapped_column, \
-    relationship, \
-    validates
-
-
-from sqlalchemy.exc import NoResultFound, \
-    IntegrityError, \
-    DataError
 
 from src.config.sqlalchemy_db import db
-from src.models.stock_symbol import StockSymbol
+
+from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
 
 class HistoricalStockPrice(db.Model):
@@ -54,8 +47,6 @@ class HistoricalStockPrice(db.Model):
         db.DateTime,
         nullable=False,
         default=datetime.now)
-
-    _stock_symbol: Mapped[StockSymbol] = relationship()
 
     def __repr__(self):
         return f'HistoricalStockPrice({self.uuid}, {self.stock_symbol_uuid})'

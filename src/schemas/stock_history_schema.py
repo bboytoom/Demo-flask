@@ -1,9 +1,6 @@
 from datetime import date, time
 from flask import request
-from marshmallow import Schema, \
-    fields, \
-    validate, \
-    pre_dump
+from marshmallow import Schema, fields, validate, pre_dump
 
 
 class StockHistorySchema(Schema):
@@ -43,7 +40,3 @@ class StockHistorySchema(Schema):
             'close_price': data[6],
             'web_identifier_uuid': data[8]
             }
-
-
-serializer_price_schema = StockHistorySchema()
-serializer_history_prices_schema = StockHistorySchema(many=True)

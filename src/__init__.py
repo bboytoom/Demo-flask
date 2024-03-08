@@ -14,10 +14,8 @@ marshmallow = Marshmallow()
 
 
 def create_app():
-    from src.config.sqlalchemy_db import db
-    from src.routes.users import users
-    from src.routes.generals import generals
-    from src.config.application import config
+    from src.config import db, config
+    from src.routes import users, generals
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config[os.environ.get('ENV')])

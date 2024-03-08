@@ -2,19 +2,11 @@ import uuid
 import logging
 
 from datetime import datetime
-from typing import List
-
-from sqlalchemy.orm import Mapped, \
-    mapped_column, \
-    relationship, \
-    validates
-
-from sqlalchemy.exc import NoResultFound, \
-    IntegrityError, \
-    DataError
 
 from src.config.sqlalchemy_db import db
-from src.models.user_stock_symbol import UserStockSymbol
+
+from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
 
 class StockSymbol(db.Model):
@@ -46,10 +38,6 @@ class StockSymbol(db.Model):
         db.DateTime,
         nullable=False,
         default=datetime.now)
-
-    _user_stock_symbol: Mapped[List[UserStockSymbol]] = relationship(
-        cascade="all, delete",
-        passive_deletes=True)
 
     def __repr__(self):
         return f'StockSymbol({self.uuid}, {self.symbol})'
