@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from src.config.sqlalchemy_db import db
-
 from sqlalchemy.orm import Mapped, mapped_column
 
 
@@ -30,3 +29,6 @@ class UserStockSymbol(db.Model):
         db.DateTime,
         nullable=False,
         default=datetime.now)
+
+    def __repr__(self):
+        return f'UserStockSymbol({self.user_uuid}, {self.stock_symbol_uuid})'

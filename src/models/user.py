@@ -4,7 +4,6 @@ import logging
 from datetime import datetime
 
 from src.config.sqlalchemy_db import db
-
 from sqlalchemy.orm import Mapped, mapped_column, validates
 from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
@@ -71,6 +70,15 @@ class User(db.Model):
             last_name=_data.get('last_name'),
             birth_day=_data.get('birth_day'),
             status=_data.get('status'))
+
+    def search_user(_user_uuid):
+        try:
+            return db.session.query(User) \
+                .filter(User.uuid == str(_user_uuid)).first()
+        except Exception as e:
+            logging.error(f'Search User error: {e}')
+
+            raise TypeError(f'Error in search user {e}')
 
     def save(self):
         try:

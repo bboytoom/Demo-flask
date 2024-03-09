@@ -4,7 +4,6 @@ import logging
 from datetime import datetime
 
 from src.config.sqlalchemy_db import db
-
 from sqlalchemy.orm import Mapped, mapped_column, validates
 from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
@@ -47,7 +46,7 @@ class StockSymbol(db.Model):
         if not _value:
             raise ValueError('The symbol is empty')
 
-        if len(_value) <= 3 or len(_value) >= 20:
+        if len(_value) <= 1 or len(_value) >= 20:
             raise ValueError('The symbol must be between 3 to 20 characters')
 
         return _value

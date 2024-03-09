@@ -4,8 +4,7 @@ import logging
 from datetime import datetime
 
 from src.config.sqlalchemy_db import db
-
-from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
 
@@ -65,22 +64,6 @@ class HistoricalStockPrice(db.Model):
             date_stock=_data.get('date_stock'),
             time_stock=_data.get('time_stock')
             )
-
-    @validates('open_price', 'high_price', 'low_price', 'close_price')
-    def validate_name(self, _key: str, _value: str):
-        if not _value:
-            raise ValueError('The name is empty')
-
-        return _value
-
-    def search_history_price(_uuid: str):
-        try:
-            return db.session.query(HistoricalStockPrice) \
-                .filter(HistoricalStockPrice.uuid == _uuid)
-        except Exception as e:
-            logging.error(f'Search User History error: {e}')
-
-            raise
 
     def save(self):
         try:

@@ -3,7 +3,7 @@ import unittest
 from src import create_app
 from src.config.sqlalchemy_db import db
 from tests.custom_asserts import CustomAsserts
-from tests.factory_test import create_history_price_to_user, payload_create_new_user
+from tests.factory_test import payload_create_new_stock_register, payload_create_new_user
 
 
 class BaseTestClass(unittest.TestCase, CustomAsserts):
@@ -17,17 +17,17 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
         self.api = self.app.test_client()
 
         # Seed
-        self.history_price_seed = create_history_price_to_user()
         self.seed_payloads_new_user = payload_create_new_user()
+        self.seed_payload_stock_register = payload_create_new_stock_register()
 
         # Context application
         self.app.app_context().push()
-        db.create_all()
+        #db.create_all()
 
     # Code that is executed after each test
-    def tearDown(self):
+    """def tearDown(self):
         try:
             db.session.remove()
             db.drop_all()
         except Exception as e:
-            print(f"Error en tearDown: {str(e)}")
+            print(f"Error en tearDown: {str(e)}")"""
