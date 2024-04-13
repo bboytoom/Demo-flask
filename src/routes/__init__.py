@@ -1,3 +1,3 @@
-from .users import users
-from .generals import generals
-from .stock_register import stock_register
+from .users import users  # noqa: F401
+from .generals import generals  # noqa: F401
+from .stock_register import stock_register  # noqa: F401

@@ -9,6 +9,8 @@ class Config:
     JSON_SORT_KEYS = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_POOL_SIZE = 1
+    SQLALCHEMY_MAX_OVERFLOW = 0
 
     dictConfig(CONFIG)
 

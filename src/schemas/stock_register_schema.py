@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, validate, validates, ValidationError
 from src.models.user import User
 
+
 class StockRegisterSchema(Schema):
 
     class Meta:

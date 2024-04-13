@@ -1,4 +1,4 @@
-from flask import jsonify, abort
+from flask import jsonify
 from flask.views import MethodView
 
 from src.schemas.stock_register_schema import StockRegisterSchema
@@ -12,7 +12,7 @@ class StockRegister(MethodView):
 
     @validator_body(StockRegisterSchema)
     def post(self, data):
-        
+
         print(data, 'data')
 
         return jsonify(

@@ -22,12 +22,12 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
 
         # Context application
         self.app.app_context().push()
-        #db.create_all()
+        db.create_all()
 
     # Code that is executed after each test
-    """def tearDown(self):
+    def tearDown(self):
         try:
             db.session.remove()
             db.drop_all()
         except Exception as e:
-            print(f"Error en tearDown: {str(e)}")"""
+            print(f"Error en tearDown: {str(e)}")
