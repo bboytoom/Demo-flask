@@ -1,22 +1,7 @@
-Es un aplicación web permite a los usuarios consultar los precios de multiples acciones utilizando un símbolo bursátil.
+Ejemplo para implementar un proyecto en flask
 
 
-
-## Features
-
-* Obtener el precio de las acciones del mercado de valores a través de una interfaz web
-* Generar un historial de los precios consultados por el usuario
-* Gráficos de la variación de los precios
-
-
-
-## WIKI
-
-[Colección de postman](https://github.com/bboytoom/Chatbot-Stock/blob/develop/utilities/ChatBot_Stock.postman_collection.json)
-
-
-
-## Instrucciones para probar el bot
+## Instrucciones para probar
 
 * Clonar el repositorio de Github
 * Ejecuta el siguiente comando para instalar los paquetes

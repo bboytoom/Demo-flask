@@ -2,25 +2,24 @@ import uuid
 import logging
 
 from datetime import datetime
-from sqlalchemy.orm import validates
-from sqlalchemy.exc import NoResultFound, \
-    IntegrityError, \
-    DataError
 
 from src.config.sqlalchemy_db import db
+from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
 
 class User(db.Model):
     __tablename__ = 'users'
+    __table_args__ = (
+        db.PrimaryKeyConstraint('uuid'),)
 
-    uuid = db.Column(
+    uuid: Mapped[str] = mapped_column(
         db.CHAR(36),
         primary_key=True,
         unique=True,
         index=True,
         nullable=False,
-        default=uuid.uuid4
-        )
+        default=uuid.uuid4)
 
     name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(70), nullable=False)
@@ -30,15 +29,13 @@ class User(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.now
-        )
+        default=datetime.now)
 
     updated_at = db.Column(
         db.DateTime,
         nullable=False,
         onupdate=datetime.now,
-        default=datetime.now
-        )
+        default=datetime.now)
 
     def __repr__(self):
         return f'User({self.uuid}, {self.name}, {self.last_name})'
@@ -72,23 +69,16 @@ class User(db.Model):
             name=_data.get('name'),
             last_name=_data.get('last_name'),
             birth_day=_data.get('birth_day'),
-            status=_data.get('status')
-            )
+            status=_data.get('status'))
 
-    def retrieve_user(_uuid: str, exception: bool = True):
+    def search_user(_user_uuid):
         try:
-            user = db.session.query(User).filter(User.uuid == _uuid)
-
-            if exception:
-                result = user.first_or_404()
-            else:
-                result = user.first()
-
-            return result
+            return db.session.query(User) \
+                .filter(User.uuid == str(_user_uuid)).first()
         except Exception as e:
             logging.error(f'Search User error: {e}')
 
-            raise
+            raise TypeError(f'Error in search user {e}')
 
     def save(self):
         try:

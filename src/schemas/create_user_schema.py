@@ -1,8 +1,4 @@
-from marshmallow import Schema, \
-    fields, \
-    validate, \
-    validates, \
-    ValidationError
+from marshmallow import Schema, fields, validate, validates, ValidationError
 
 
 class CreateUserSchema(Schema):
@@ -41,6 +37,3 @@ class CreateUserSchema(Schema):
             return value
 
         raise ValidationError('The last_name is invalid')
-
-
-serializer_user_schema = CreateUserSchema()
