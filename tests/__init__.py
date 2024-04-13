@@ -2,23 +2,23 @@ import unittest
 
 from src import create_app
 from src.config.sqlalchemy_db import db
-from tests.factory_test import create_user, create_history_price_to_user
+from tests.custom_asserts import CustomAsserts
+from tests.factory_test import payload_create_new_stock_register, payload_create_new_user
 
 
-class BaseTestClass(unittest.TestCase):
+class BaseTestClass(unittest.TestCase, CustomAsserts):
 
     # Code that is executed before each test
     def setUp(self):
         self.app = create_app()
+        self.db_connection = db
 
-        # Url seed
-        self.url_base = 'https://stooq.com/q/l/?s=%s.us&f=sd2t2ohlcv&h&e=csv'
-        self.url_fail = 'https://tedfdfst.com/'
-        self.url_timeout = 'https://test.com/'
+        # Api
+        self.api = self.app.test_client()
 
         # Seed
-        self.user_seed = create_user()
-        self.history_price_seed = create_history_price_to_user()
+        self.seed_payloads_new_user = payload_create_new_user()
+        self.seed_payload_stock_register = payload_create_new_stock_register()
 
         # Context application
         self.app.app_context().push()
@@ -26,5 +26,8 @@ class BaseTestClass(unittest.TestCase):
 
     # Code that is executed after each test
     def tearDown(self):
-        self.app.app_context().push()
-        db.drop_all()
+        try:
+            db.session.remove()
+            db.drop_all()
+        except Exception as e:
+            print(f"Error en tearDown: {str(e)}")

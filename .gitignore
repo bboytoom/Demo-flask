@@ -73,3 +73,5 @@ build/
 logs/*
 env/
 database.db
+database/
+.vscode

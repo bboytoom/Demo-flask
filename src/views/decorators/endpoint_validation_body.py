@@ -22,6 +22,6 @@ def validator_body(schema):
             if errors:
                 return abort(422, errors)
 
-            return func(self, schema_event.load(request.get_json()), *args, **kwargs)
+            return func(self, request.get_json(), *args, **kwargs)
         return wrapper
     return validation
