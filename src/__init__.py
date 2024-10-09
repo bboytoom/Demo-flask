@@ -15,7 +15,7 @@ marshmallow = Marshmallow()
 
 def create_app():
     from src.config import db, config
-    from src.routes import users, generals, stock_register
+    from src.routes import users, generals
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config[os.environ.get('ENV')])
@@ -30,7 +30,6 @@ def create_app():
     # Routes
     app.register_blueprint(users)
     app.register_blueprint(generals)
-    app.register_blueprint(stock_register)
 
     # Routes error
     register_error(app)

@@ -4,7 +4,8 @@ import logging
 from datetime import datetime
 
 from src.config.sqlalchemy_db import db
-from sqlalchemy.orm import Mapped, mapped_column, validates
+
+from sqlalchemy.orm import validates
 from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
 
 
@@ -12,8 +13,10 @@ class User(db.Model):
     __tablename__ = 'users'
     __table_args__ = (
         db.PrimaryKeyConstraint('uuid'),)
+    # db.Index('ix_user_stock_symbol', 'user_uuid', 'stock_symbol_uuid'),
+    # db.UniqueConstraint('user_uuid', 'stock_symbol_uuid', name='uq_user_stock_symbol'),
 
-    uuid: Mapped[str] = mapped_column(
+    uuid = db.Column(
         db.CHAR(36),
         primary_key=True,
         unique=True,

@@ -6,9 +6,6 @@ from flask import current_app
 from alembic import context
 
 from src.models.user import User
-from src.models.stock_symbol import StockSymbol
-from src.models.user_stock_symbol import UserStockSymbol
-from src.models.historical_stock_price import HistoricalStockPrice
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
