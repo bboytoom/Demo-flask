@@ -39,15 +39,10 @@ def create_app():
 
 # Handle error
 def register_error(app):
-    from src.helpers.handler_errors import page_not_found, \
-        internal_server_error, \
-        rate_limit_handler, \
-        bad_request_handler, \
-        method_not_allow_handler, \
-        unprocessable_entity, \
-        conflict_handler, \
-        unauthorized, \
-        forbidden
+    from src.helpers import (page_not_found, internal_server_error, rate_limit_handler,
+                             bad_request_handler, method_not_allow_handler,
+                             unprocessable_entity, conflict_handler, unauthorized,
+                             forbidden)
 
     app.register_error_handler(400, bad_request_handler)
     app.register_error_handler(401, unauthorized)
