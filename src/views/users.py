@@ -3,8 +3,8 @@ import logging
 from flask import jsonify, abort
 from flask.views import MethodView
 
-from src.repositories.user_repository import UserRepository
-from src.schemas.create_user_schema import CreateUserSchema
+from src.services.users_service import UserService
+from src.schemas.user_schema import UserSchema
 from src.views.decorators.endpoint_validation_body import validator_body
 
 
@@ -13,10 +13,10 @@ class Users(MethodView):
     Endpoint for user information management
     """
 
-    @validator_body(CreateUserSchema)
+    @validator_body(UserSchema)
     def post(self, data):
         try:
-            user = UserRepository.add(data)
+            user = UserService.create(data)
         except Exception as e:
             logging.error(f'Insert user error: {e}')
 
@@ -24,5 +24,5 @@ class Users(MethodView):
 
         return jsonify(
             message='Successful request',
-            user_uuid=user.uuid
+            user_uuid=user.get('uuid')
             ), 201

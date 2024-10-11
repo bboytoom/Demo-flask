@@ -32,19 +32,21 @@ services:
     networks:
       - net
 
-  #nginx-host:
-    #container_name: nginx-host
-    #image: nginx:latest
-    #depends_on:
-    #  - backend-app
-    #ports:
-    #  - '80:80'
-    #  - '443:443'
-    #expose:
-    #  - 80
-    #  - 443
-    #volumes:
-    #  - $PWD:/app/nginx
+  nginx-host:
+    container_name: nginx-host
+    image: nginx:latest
+    depends_on:
+      - backend-app
+    ports:
+      - '80:80'
+      - '443:443'
+    expose:
+      - 80
+      - 443
+    volumes:
+      - $PWD:/app/nginx
+    networks:
+      - net
 
 networks:
   net:
