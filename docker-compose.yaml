@@ -1,27 +1,6 @@
-version: '3'
-
 services:
-  database-host:
-    container_name: database-host
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - '3306:3306'
-    expose:
-      - 3306
-    networks:
-      - net
-
   backend-app:
     container_name: backend-app
-    depends_on:
-      - database-host
     build: .
     ports:
       - '5000:5000'
@@ -29,22 +8,6 @@ services:
       - 5000
     volumes:
       - $PWD:/app
-    networks:
-      - net
-
-  nginx-host:
-    container_name: nginx-host
-    image: nginx:latest
-    depends_on:
-      - backend-app
-    ports:
-      - '80:80'
-      - '443:443'
-    expose:
-      - 80
-      - 443
-    volumes:
-      - $PWD:/app/nginx
     networks:
       - net
 
