@@ -1,10 +1,12 @@
 from marshmallow import Schema, fields, validate, validates, ValidationError
 
 
-class CreateUserSchema(Schema):
+class UserSchema(Schema):
 
     class Meta:
         ordered = True
+
+    uuid = fields.UUID(dump_only=True)
 
     name = fields.Str(
         required=True,
@@ -22,6 +24,10 @@ class CreateUserSchema(Schema):
 
     birth_day = fields.Date('%Y-%m-%d')
 
+    status = fields.Boolean(dump_only=True)
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
+
     @validates('name')
     def is_valid_name(self, value):
 
@@ -37,3 +43,6 @@ class CreateUserSchema(Schema):
             return value
 
         raise ValidationError('The last_name is invalid')
+
+
+create_user_response = UserSchema(only=('uuid',))

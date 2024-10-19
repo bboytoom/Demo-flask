@@ -1,11 +1,9 @@
 import uuid
-import logging
 
 from datetime import datetime
-
 from src.config.sqlalchemy_db import db
-from sqlalchemy.orm import Mapped, mapped_column, validates
-from sqlalchemy.exc import NoResultFound, IntegrityError, DataError
+
+from sqlalchemy.orm import validates
 
 
 class User(db.Model):
@@ -13,7 +11,7 @@ class User(db.Model):
     __table_args__ = (
         db.PrimaryKeyConstraint('uuid'),)
 
-    uuid: Mapped[str] = mapped_column(
+    uuid = db.Column(
         db.CHAR(36),
         primary_key=True,
         unique=True,
@@ -59,40 +57,3 @@ class User(db.Model):
             raise ValueError('The last_name must be between 2 to 70 characters')
 
         return _value
-
-    @classmethod
-    def new_user(cls, _data: dict):
-        if len(_data) == 0:
-            raise NoResultFound('The model is empty.')
-
-        return User(
-            name=_data.get('name'),
-            last_name=_data.get('last_name'),
-            birth_day=_data.get('birth_day'),
-            status=_data.get('status'))
-
-    def search_user(_user_uuid):
-        try:
-            return db.session.query(User) \
-                .filter(User.uuid == str(_user_uuid)).first()
-        except Exception as e:
-            logging.error(f'Search User error: {e}')
-
-            raise TypeError(f'Error in search user {e}')
-
-    def save(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-
-            return self
-        except IntegrityError as err:
-            logging.error(f'Duplicated data : {err}')
-
-            raise TypeError('Duplicated data in database')
-        except DataError as err:
-            logging.error(f'Error was inserted data : {err}')
-
-            db.session.rollback()
-
-            raise TypeError('Data error was inserted')

@@ -15,7 +15,7 @@ marshmallow = Marshmallow()
 
 def create_app():
     from src.config import db, config
-    from src.routes import users, generals, stock_register
+    from src.routes import users, generals
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config[os.environ.get('ENV')])
@@ -30,7 +30,6 @@ def create_app():
     # Routes
     app.register_blueprint(users)
     app.register_blueprint(generals)
-    app.register_blueprint(stock_register)
 
     # Routes error
     register_error(app)
@@ -40,15 +39,10 @@ def create_app():
 
 # Handle error
 def register_error(app):
-    from src.helpers.handler_errors import page_not_found, \
-        internal_server_error, \
-        rate_limit_handler, \
-        bad_request_handler, \
-        method_not_allow_handler, \
-        unprocessable_entity, \
-        conflict_handler, \
-        unauthorized, \
-        forbidden
+    from src.helpers import (page_not_found, internal_server_error, rate_limit_handler,
+                             bad_request_handler, method_not_allow_handler,
+                             unprocessable_entity, conflict_handler, unauthorized,
+                             forbidden)
 
     app.register_error_handler(400, bad_request_handler)
     app.register_error_handler(401, unauthorized)

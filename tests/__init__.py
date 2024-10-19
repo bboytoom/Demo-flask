@@ -3,7 +3,7 @@ import unittest
 from src import create_app
 from src.config.sqlalchemy_db import db
 from tests.custom_asserts import CustomAsserts
-from tests.factory_test import payload_create_new_stock_register, payload_create_new_user
+from tests.factory_test import payload_create_new_user
 
 
 class BaseTestClass(unittest.TestCase, CustomAsserts):
@@ -18,7 +18,6 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
 
         # Seed
         self.seed_payloads_new_user = payload_create_new_user()
-        self.seed_payload_stock_register = payload_create_new_stock_register()
 
         # Context application
         self.app.app_context().push()
