@@ -9,9 +9,9 @@ from sqlalchemy.exc import NoResultFound, DataError, IntegrityError
 class UserRepository:
 
     @classmethod
-    def get_by_uuid(cls, _uuid: str) -> User:
+    def get_by_email(cls, _email: str) -> User:
         try:
-            query = (db.session.query(User).filter(User.uuid == _uuid))
+            query = (db.session.query(User).filter(User.email == _email))
 
             return query.first()
         except NoResultFound:

@@ -27,8 +27,8 @@ class Users(MethodView):
             user_uuid=user.get('uuid')
             ), 201
 
-    def get(self):
-        print('hi')
+    def get(self, user_uuid):
+        print(user_uuid)
 
         return jsonify(
             data={}
