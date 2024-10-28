@@ -13,6 +13,7 @@ Ejemplo para implementar un proyecto en flask
                 - development
                 - testing
                 - production
+        - SECRET_KEY: Debemos crear un string random para utilizarlo como complemento de la contraseña 
         - DATABASE_URL: Es la URL de la base de datos
             - Formato necesario para la conexión a la base de datos
                 - mysql+pymysql://{usuario}:{password}@{host}/{nombre_de_base_de_datos}

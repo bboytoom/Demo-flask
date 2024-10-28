@@ -1,3 +1,4 @@
+import re
 from marshmallow import Schema, fields, validate, validates, ValidationError
 
 
@@ -5,8 +6,26 @@ class UserSchema(Schema):
 
     class Meta:
         ordered = True
+        name = 'user'
+        plural_name = 'users'
 
     uuid = fields.UUID(dump_only=True)
+
+    email = fields.Email(
+        required=True,
+        validate=[
+            validate.Length(min=8, max=70)
+            ]
+        )
+
+    password_hash = fields.Str(
+        load_only=True,
+        data_key='password',
+        required=True,
+        validate=[
+            validate.Length(min=8, max=30)
+            ]
+        )
 
     name = fields.Str(
         required=True,
@@ -34,7 +53,7 @@ class UserSchema(Schema):
         if value.isalnum():
             return value
 
-        raise ValidationError('The name is invalid')
+        raise ValidationError('The name is invalid.')
 
     @validates('last_name')
     def is_valid_last_name(self, value):
@@ -42,7 +61,23 @@ class UserSchema(Schema):
         if value.isalnum():
             return value
 
-        raise ValidationError('The last_name is invalid')
+        raise ValidationError('The last_name is invalid.')
+
+    @validates('password_hash')
+    def is_valid_password(self, value):
+        if not re.search(r"[A-Z]", value):
+            raise ValidationError('The password must have at least one capital letter.')
+
+        if not re.search(r"[a-z]", value):
+            raise ValidationError('The password must have at least one lowercase letter.')
+
+        if not re.search(r"[0-9]", value):
+            raise ValidationError('The password must have at least one number.')
+
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", value):
+            raise ValidationError('The password must have at least one special character.')
+
+        return value
 
 
 create_user_response = UserSchema(only=('uuid',))

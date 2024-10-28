@@ -32,6 +32,111 @@ class TestNewUser(BaseTestClass):
         self.assert_json_response(response, 'Successful request', 201, None)
         self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
 
+    def test_new_user_without_email(self):
+        arrange = self.seed_payloads_new_user
+        arrange.pop('email')
+
+        expected_exceptions = {
+            'email': ['Missing data for required field.']
+            }
+
+        response = self.api.post(url,  headers=headers, json=arrange)
+        self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
+    def test_new_user_with_email_wrong(self):
+        fail_payload = self.seed_payloads_new_user
+        fail_payload.update({
+            'email': 'testemail.com'
+            })
+
+        expected_exceptions = {
+            'email': ['Not a valid email address.']
+            }
+
+        response = self.api.post(url,  headers=headers, json=fail_payload)
+        self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
+    def test_new_user_without_password(self):
+        arrange = self.seed_payloads_new_user
+        arrange.pop('password')
+
+        expected_exceptions = {
+            'password': ['Missing data for required field.']
+            }
+
+        response = self.api.post(url,  headers=headers, json=arrange)
+        self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
+    def test_new_user_with_password_8_characters(self):
+        fake_data = self.seed_payloads_new_user
+        incorrect_test = ['a', 'T5tP@0r']
+
+        expected_exceptions = {
+            'password': ['Length must be between 8 and 30.']
+            }
+
+        for item in incorrect_test:
+            fake_data['password'] = item
+
+            response = self.api.post(url,  headers=headers, json=fake_data)
+            self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
+    def test_new_user_with_password_capital_letter(self):
+        fake_data = self.seed_payloads_new_user
+        incorrect_test = ['te5tp@ssw0rd', 'te5tp@ ssw0rd']
+
+        expected_exceptions = {
+            'password': ['The password must have at least one capital letter.']
+            }
+
+        for item in incorrect_test:
+            fake_data['password'] = item
+
+            response = self.api.post(url,  headers=headers, json=fake_data)
+            self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
+    def test_new_user_with_password_lower_letter(self):
+        fake_data = self.seed_payloads_new_user
+        incorrect_test = ['TE5TP@SSW0RD', 'TE5TP@ SSW0RD']
+
+        expected_exceptions = {
+            'password': ['The password must have at least one lowercase letter.']
+            }
+
+        for item in incorrect_test:
+            fake_data['password'] = item
+
+            response = self.api.post(url,  headers=headers, json=fake_data)
+            self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
+    def test_new_user_with_password_number(self):
+        fake_data = self.seed_payloads_new_user
+        incorrect_test = ['teStp@sswOrd', 'teStp@ sswOrd']
+
+        expected_exceptions = {
+            'password': ['The password must have at least one number.']
+            }
+
+        for item in incorrect_test:
+            fake_data['password'] = item
+
+            response = self.api.post(url,  headers=headers, json=fake_data)
+            self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
+    def test_new_user_with_password_special_characters(self):
+        fake_data = self.seed_payloads_new_user
+        incorrect_test = ['Te5tPassw0rd', 'Te5t Passw0rd']
+
+        expected_exceptions = {
+            'password': ['The password must have at least one special character.']
+            }
+
+        for item in incorrect_test:
+            fake_data['password'] = item
+
+            response = self.api.post(url,  headers=headers, json=fake_data)
+            self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
+
     def test_new_user_empty_data(self):
         fail_payload = {}
 

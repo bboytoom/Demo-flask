@@ -3,8 +3,8 @@ import logging
 from flask import jsonify, abort
 from flask.views import MethodView
 
-from src.services.users_service import UserService
 from src.schemas.user_schema import UserSchema
+from src.services.users_service import UserService
 from src.views.decorators.endpoint_validation_body import validator_body
 
 
@@ -26,3 +26,10 @@ class Users(MethodView):
             message='Successful request',
             user_uuid=user.get('uuid')
             ), 201
+
+    def get(self):
+        print('hi')
+
+        return jsonify(
+            data={}
+            ), 200

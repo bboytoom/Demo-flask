@@ -28,9 +28,11 @@ class UserRepository:
         if len(_data) == 0:
             raise NoResultFound('The model is empty.')
 
-        user = User(name=_data.get('name'),
+        user = User(email=_data.get('email'),
+                    password_hash=_data.get('password'),
+                    name=_data.get('name'),
                     last_name=_data.get('last_name'),
-                    birth_day=_data.get('birth_day'),
+                    birth_day=_data.get('birth_day', None),
                     status=_data.get('status', True))
 
         return cls._save(user)

@@ -9,3 +9,9 @@ users.add_url_rule(
     view_func=Users.as_view('create_user'),
     methods=['POST']
     )
+
+users.add_url_rule(
+    '',
+    view_func=Users.as_view('retrieve_users'),
+    methods=['GET']
+    )

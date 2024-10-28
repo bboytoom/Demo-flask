@@ -19,6 +19,9 @@ class User(db.Model):
         nullable=False,
         default=uuid.uuid4)
 
+    email = db.Column(db.String(255), unique=True, index=True, nullable=False)
+    password_hash = db.Column(db.String(550), nullable=False)
+
     name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(70), nullable=False)
     birth_day = db.Column(db.Date, nullable=True)
@@ -36,7 +39,7 @@ class User(db.Model):
         default=datetime.now)
 
     def __repr__(self):
-        return f'User({self.uuid}, {self.name}, {self.last_name})'
+        return f'User({self.uuid}, {self.email}, {self.name}, {self.last_name})'
 
     @validates('name')
     def validate_name(self, _key: str, _value: str):
