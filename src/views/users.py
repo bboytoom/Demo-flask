@@ -2,6 +2,7 @@ import logging
 
 from flask import jsonify, abort
 from flask.views import MethodView
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.schemas.user_schema import UserSchema
 from src.services.users_service import UserService
@@ -27,8 +28,15 @@ class Users(MethodView):
             user_uuid=user.get('uuid')
             ), 201
 
+    @jwt_required()
     def get(self, user_uuid):
-        print(user_uuid)
+        current_user = get_jwt_identity()
+
+        print('\n --------------------\n')
+        print(user_uuid, 'uuid')
+        print('\n --------------------\n')
+        print(current_user, 'token')
+        print('\n --------------------\n')
 
         return jsonify(
             data={}

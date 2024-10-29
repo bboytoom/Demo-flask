@@ -2,6 +2,8 @@ import os
 import bcrypt
 import logging
 
+from flask_jwt_extended import create_access_token, create_refresh_token
+
 from src.schemas.user_schema import create_user_response, authorize_user_response
 from src.repositories.user_repository import UserRepository
 
@@ -23,8 +25,16 @@ class UserService:
                     }
 
             credentials = authorize_user_response.dump(user)
+
+            access_token = create_access_token(identity=user.uuid)
+            refresh_token = create_refresh_token(identity=user.uuid)
+
             credentials.update({
-                'authorize': True
+                'authorize': True,
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+                'expires_in': 10800,
+                'token_type': 'Bearer'
                 })
 
             return credentials

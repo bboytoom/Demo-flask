@@ -5,7 +5,7 @@ from marshmallow import Schema, fields, validate, validates, ValidationError
 class UserSchema(Schema):
 
     class Meta:
-        ordered = True
+        ordered = False
         name = 'user'
         plural_name = 'users'
 

@@ -11,7 +11,7 @@ users.add_url_rule(
     )
 
 users.add_url_rule(
-    '/user_uuid/<uuid:user_uuid>',
-    view_func=Users.as_view('retrieve_users'),
+    '/<uuid:user_uuid>',
+    view_func=Users.as_view('user_by_uuid'),
     methods=['GET']
     )

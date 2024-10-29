@@ -11,7 +11,15 @@ class UserRepository:
     @classmethod
     def get_by_email(cls, _email: str) -> User:
         try:
-            query = (db.session.query(User).filter(User.email == _email))
+            query = (
+                db.session.query(
+                    User.uuid,
+                    User.email,
+                    User.password_hash,
+                    User.name,
+                    User.last_name,
+                    User.birth_day
+                    ).filter(User.email == _email))
 
             return query.first()
         except NoResultFound:

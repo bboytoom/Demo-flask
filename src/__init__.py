@@ -7,6 +7,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 
+
 load_dotenv('.env')
 
 migrate = Migrate()
@@ -14,18 +15,20 @@ marshmallow = Marshmallow()
 
 
 def create_app():
-    from src.config import db, config
+    from src.config import JWTConfig, jwt, db, config
     from src.routes import users, generals
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config[os.environ.get('ENV')])
+    app.config.from_object(JWTConfig)
 
     CORS(app)
 
-    # Database
+    # Config
     db.init_app(app)
     migrate.init_app(app, db)
     marshmallow.init_app(app)
+    jwt.init_app(app)
 
     # Routes
     app.register_blueprint(users)
