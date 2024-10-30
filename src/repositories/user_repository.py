@@ -1,15 +1,16 @@
 import logging
 
 from src.models.user import User
-from src.config.sqlalchemy_db import db
 
+from sqlalchemy import and_
+from src.config.sqlalchemy_db import db
 from sqlalchemy.exc import NoResultFound, DataError, IntegrityError
 
 
 class UserRepository:
 
     @classmethod
-    def get_by_email(cls, _email: str) -> User:
+    def get_user_by_email(cls, _email: str) -> User:
         try:
             query = (
                 db.session.query(
@@ -19,7 +20,7 @@ class UserRepository:
                     User.name,
                     User.last_name,
                     User.birth_day
-                    ).filter(User.email == _email))
+                    ).filter(and_(User.email == _email, User.status is True)))
 
             return query.first()
         except NoResultFound:

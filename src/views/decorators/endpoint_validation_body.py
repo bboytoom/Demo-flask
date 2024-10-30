@@ -2,7 +2,7 @@ import functools
 from flask import request, abort
 
 
-def validator_body(schema):
+def validator_body(schema, cls=False):
     """
     Decorator function that validates the endpoint body.
     """
@@ -10,7 +10,7 @@ def validator_body(schema):
     # Sub function
     def validation(func):
         @functools.wraps(func)
-        def wrapper(self, *args, **kwargs):
+        def wrapper(*args, **kwargs):
             content_type = request.headers.get('Content-Type')
             schema_event = schema()
 
@@ -22,6 +22,9 @@ def validator_body(schema):
             if errors:
                 return abort(422, errors)
 
-            return func(self, request.get_json(), *args, **kwargs)
+            if not cls:
+                return func(request.get_json(), *args, **kwargs)
+
+            return func(args[0], request.get_json(), *args, **kwargs)
         return wrapper
     return validation

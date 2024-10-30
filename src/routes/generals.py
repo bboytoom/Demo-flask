@@ -1,13 +1,14 @@
 from flask import Blueprint
 from src.views.url_test import url_test
-from src.views.authorization import Authorization
+from src.views.authorization import sing_up, login, refresh
 
 
 generals = Blueprint('generals', __name__,  url_prefix='/api/v1')
 
+# Test
 generals.route('/ping', methods=['GET'])(url_test)
-generals.add_url_rule(
-    '/login',
-    view_func=Authorization.as_view('login'),
-    methods=['POST']
-    )
+
+# Authorizer
+generals.route('/sing_up', methods=['POST'])(sing_up)
+generals.route('/login', methods=['POST'])(login)
+generals.route('/refresh', methods=['POST'])(refresh)

@@ -14,20 +14,32 @@ class UserService:
         self.user_repository = UserRepository()
 
     @classmethod
+    def get_new_token(cls, _email: str) -> dict:
+        try:
+            return cls._new_credentials(_email, None)
+        except Exception as e:
+            logging.error(f'Error get new token: {e}')
+
+    @classmethod
     def authorize(cls, _data: dict) -> dict:
 
         try:
-            user = UserRepository.get_by_email(_data.get('email', None))
+            return cls._new_credentials(_data.get('email'), _data.get('password'))
+        except Exception as e:
+            logging.error(f'Error authorize: {e}')
 
-            if not cls._verify_password(_data.get('password', None), user.password_hash):
-                return {
-                    'authorize': False
-                    }
+    @classmethod
+    def _new_credentials(cls, _email: str, _password: str | None) -> dict:
+        try:
+            user = UserRepository.get_user_by_email(_email)
+
+            if _password and not UserService._verify_password(_password, user.password_hash):
+                return {'authorize': False}
 
             credentials = authorize_user_response.dump(user)
 
-            access_token = create_access_token(identity=user.uuid)
-            refresh_token = create_refresh_token(identity=user.uuid)
+            access_token = create_access_token(identity=user.email)
+            refresh_token = create_refresh_token(identity=user.email)
 
             credentials.update({
                 'authorize': True,
@@ -39,7 +51,7 @@ class UserService:
 
             return credentials
         except Exception as e:
-            logging.error(f'Error authorize: {e}')
+            logging.error(f'Error new_credentials: {e}')
 
     @classmethod
     def create(cls, _data: dict) -> dict:
