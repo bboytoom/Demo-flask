@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from src.views.users import Users
+from src.views import Users
 
 users = Blueprint('users', __name__,  url_prefix='/api/v1/users')
 

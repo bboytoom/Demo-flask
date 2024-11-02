@@ -3,10 +3,9 @@ import logging
 from flask import jsonify, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from src.schemas.user_schema import UserSchema
-from src.schemas.user_authorize import UserAuthorize
-from src.services.users_service import UserService
-from src.views.decorators.endpoint_validation_body import validator_body
+from src.decorators import validator_body
+from src.schemas import UserSchema, UserAuthorize
+from src.services import UserService, AuthService
 
 
 @validator_body(UserSchema)
@@ -27,7 +26,7 @@ def sing_up(_data):
 @validator_body(UserAuthorize)
 def login(_data):
     try:
-        auth = UserService.authorize(_data)
+        auth = AuthService.authorize(_data)
     except Exception as e:
         logging.error(f'authorize error: {e}')
 
@@ -48,7 +47,7 @@ def login(_data):
 def refresh():
     email = get_jwt_identity()
 
-    auth = UserService.get_new_token(email)
+    auth = AuthService.get_new_token(email)
     auth.pop('authorize')
 
     return jsonify(

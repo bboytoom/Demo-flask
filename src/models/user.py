@@ -1,9 +1,9 @@
 import uuid
 
 from datetime import datetime
-from src.config.sqlalchemy_db import db
-
 from sqlalchemy.orm import validates
+
+from src.config import db
 
 
 class User(db.Model):

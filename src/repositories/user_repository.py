@@ -1,10 +1,10 @@
 import logging
 
-from src.models.user import User
-
 from sqlalchemy import and_
-from src.config.sqlalchemy_db import db
 from sqlalchemy.exc import NoResultFound, DataError, IntegrityError
+
+from src.config import db
+from src.models import User
 
 
 class UserRepository:

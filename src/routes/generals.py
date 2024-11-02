@@ -1,6 +1,6 @@
 from flask import Blueprint
-from src.views.url_test import url_test
-from src.views.authorization import sing_up, login, refresh
+
+from src.views import url_test, sing_up, login, refresh
 
 
 generals = Blueprint('generals', __name__,  url_prefix='/api/v1')
