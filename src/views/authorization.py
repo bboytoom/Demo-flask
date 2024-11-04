@@ -1,5 +1,3 @@
-import logging
-
 from flask import jsonify, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -10,12 +8,10 @@ from src.services import UserService, AuthService
 
 @validator_body(UserSchema)
 def sing_up(_data):
-    try:
-        user = UserService.create(_data)
-    except Exception as e:
-        logging.error(f'Insert user error: {e}')
+    user = UserService.create(_data)
 
-        return abort(500, 'Error inserting data')
+    if user.get('code', None) == 409:
+        return abort(409, 'The user does exists')
 
     return jsonify(
         message='Successful request',
@@ -25,12 +21,7 @@ def sing_up(_data):
 
 @validator_body(UserAuthorize)
 def login(_data):
-    try:
-        auth = AuthService.authorize(_data)
-    except Exception as e:
-        logging.error(f'authorize error: {e}')
-
-        return abort(500, 'Error authorize')
+    auth = AuthService.authorize(_data)
 
     if not auth.get('authorize', False):
         return abort(401, 'Error in password or email')

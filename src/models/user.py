@@ -1,7 +1,6 @@
 import uuid
 
 from datetime import datetime
-from sqlalchemy.orm import validates
 
 from src.config import db
 
@@ -20,11 +19,11 @@ class User(db.Model):
         default=uuid.uuid4)
 
     email = db.Column(db.String(255), unique=True, index=True, nullable=False)
-    password_hash = db.Column(db.String(550), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
 
-    name = db.Column(db.String(30), nullable=False)
-    last_name = db.Column(db.String(70), nullable=False)
-    birth_day = db.Column(db.Date, nullable=True)
+    name = db.Column(db.String(255), nullable=False)
+    last_name = db.Column(db.String(255), nullable=False)
+    birth_day = db.Column(db.String(255), nullable=True)
     status = db.Column(db.Boolean, default=True)
 
     created_at = db.Column(
@@ -39,24 +38,4 @@ class User(db.Model):
         default=datetime.now)
 
     def __repr__(self):
-        return f'User({self.uuid}, {self.email}, {self.name}, {self.last_name})'
-
-    @validates('name')
-    def validate_name(self, _key: str, _value: str):
-        if not _value:
-            raise ValueError('The name is empty')
-
-        if len(_value) <= 2 or len(_value) >= 30:
-            raise ValueError('The name must be between 2 to 30 characters')
-
-        return _value
-
-    @validates('last_name')
-    def validate_last_name(self, _key: str, _value: str):
-        if not _value:
-            raise ValueError('The last_name is empty')
-
-        if len(_value) <= 2 or len(_value) >= 70:
-            raise ValueError('The last_name must be between 2 to 70 characters')
-
-        return _value
+        return f'User({self.uuid}, {self.email}, {self.name}, {self.last_name}, {self.birth_day})'

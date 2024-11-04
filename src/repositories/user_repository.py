@@ -9,8 +9,7 @@ from src.models import User
 
 class UserRepository:
 
-    @classmethod
-    def get_user_by_email(cls, _email: str) -> User:
+    def get_user_by_email(self, _email: str) -> User:
         try:
             query = (
                 db.session.query(
@@ -20,7 +19,7 @@ class UserRepository:
                     User.name,
                     User.last_name,
                     User.birth_day
-                    ).filter(and_(User.email == _email, User.status is True)))
+                    ).filter(and_(User.email == _email, User.status)))
 
             return query.first()
         except NoResultFound:
@@ -32,30 +31,25 @@ class UserRepository:
 
             raise
 
-    @classmethod
-    def add(cls, _data: dict) -> User:
-        if len(_data) == 0:
-            raise NoResultFound('The model is empty.')
-
-        user = User(email=_data.get('email'),
+    def create_object(self, _data: dict) -> User:
+        return User(uuid=_data.get('uuid', None),
+                    email=_data.get('email'),
                     password_hash=_data.get('password'),
                     name=_data.get('name'),
                     last_name=_data.get('last_name'),
                     birth_day=_data.get('birth_day', None),
                     status=_data.get('status', True))
 
-        return cls._save(user)
+    def add(self, _data: dict) -> User:
+        if len(_data) == 0:
+            raise NoResultFound('The model is empty.')
 
-    @staticmethod
-    def _save(_data: User) -> User:
         try:
-            db.session.add(_data)
+            db.session.add(self.create_object(_data))
             db.session.commit()
-
-            return _data
         except IntegrityError:
             db.session.rollback()
-            logging.error('Duplicated data')
+            logging.warning('Duplicated data')
 
             raise TypeError('Duplicated data in database')
         except DataError:
@@ -68,3 +62,5 @@ class UserRepository:
             logging.error(f'Error inserting data: {e}')
 
             raise
+
+        return _data
