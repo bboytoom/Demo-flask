@@ -1,13 +1,13 @@
 from src.models.user import User
 from tests import BaseTestClass
 
-url = '/api/v1/users'
+url = '/api/v1/sing_up'
 headers = {'Content-Type': 'application/json'}
 
 
 class TestNewUser(BaseTestClass):
 
-    def test_new_user_success(self):
+    def test_sing_up_success(self):
         response = self.api.post(url,  headers=headers, json=self.seed_payloads_new_user)
         response_data = response.get_json()
 
@@ -18,7 +18,13 @@ class TestNewUser(BaseTestClass):
         self.assert_json_response(response, 'Successful request', 201, None)
         self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
 
-    def test_new_user_without_birth_day(self):
+    def test_sing_up_exists_user(self):
+        response = self.api.post(url,  headers=headers, json=self.seed_payloads_new_user)
+        response = self.api.post(url,  headers=headers, json=self.seed_payloads_new_user)
+
+        self.assert_json_response(response, 'Conflict', 409, None)
+
+    def test_sing_up_without_birth_day(self):
         arrange = self.seed_payloads_new_user
         arrange.pop('birth_day')
 
@@ -32,7 +38,7 @@ class TestNewUser(BaseTestClass):
         self.assert_json_response(response, 'Successful request', 201, None)
         self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
 
-    def test_new_user_without_email(self):
+    def test_sing_up_without_email(self):
         arrange = self.seed_payloads_new_user
         arrange.pop('email')
 
@@ -43,7 +49,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=arrange)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_with_email_wrong(self):
+    def test_sing_up_with_email_wrong(self):
         fail_payload = self.seed_payloads_new_user
         fail_payload.update({
             'email': 'testemail.com'
@@ -56,7 +62,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_without_password(self):
+    def test_sing_up_without_password(self):
         arrange = self.seed_payloads_new_user
         arrange.pop('password')
 
@@ -67,7 +73,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=arrange)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_with_password_8_characters(self):
+    def test_sing_up_with_password_8_characters(self):
         fake_data = self.seed_payloads_new_user
         incorrect_test = ['a', 'T5tP@0r']
 
@@ -81,7 +87,7 @@ class TestNewUser(BaseTestClass):
             response = self.api.post(url,  headers=headers, json=fake_data)
             self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_with_password_capital_letter(self):
+    def test_sing_up_with_password_capital_letter(self):
         fake_data = self.seed_payloads_new_user
         incorrect_test = ['te5tp@ssw0rd', 'te5tp@ ssw0rd']
 
@@ -95,7 +101,7 @@ class TestNewUser(BaseTestClass):
             response = self.api.post(url,  headers=headers, json=fake_data)
             self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_with_password_lower_letter(self):
+    def test_sing_up_with_password_lower_letter(self):
         fake_data = self.seed_payloads_new_user
         incorrect_test = ['TE5TP@SSW0RD', 'TE5TP@ SSW0RD']
 
@@ -109,7 +115,7 @@ class TestNewUser(BaseTestClass):
             response = self.api.post(url,  headers=headers, json=fake_data)
             self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_with_password_number(self):
+    def test_sing_up_with_password_number(self):
         fake_data = self.seed_payloads_new_user
         incorrect_test = ['teStp@sswOrd', 'teStp@ sswOrd']
 
@@ -123,7 +129,7 @@ class TestNewUser(BaseTestClass):
             response = self.api.post(url,  headers=headers, json=fake_data)
             self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_with_password_special_characters(self):
+    def test_sing_up_with_password_special_characters(self):
         fake_data = self.seed_payloads_new_user
         incorrect_test = ['Te5tPassw0rd', 'Te5t Passw0rd']
 
@@ -137,7 +143,7 @@ class TestNewUser(BaseTestClass):
             response = self.api.post(url,  headers=headers, json=fake_data)
             self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_empty_data(self):
+    def test_sing_up_empty_data(self):
         fail_payload = {}
 
         expected_exceptions = {
@@ -148,7 +154,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_name_and_last_name_no_valid(self):
+    def test_sing_up_name_and_last_name_no_valid(self):
         fail_payload = self.seed_payloads_new_user
         fail_payload.update({
             'name': 123,
@@ -163,7 +169,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_max_characters_name(self):
+    def test_sing_up_max_characters_name(self):
         fail_payload = self.seed_payloads_new_user
         fail_payload.update({
             'name': 'sdkdkdflkmvdlfmldskdknfknkvfkdf'
@@ -176,7 +182,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_min_characters_name(self):
+    def test_sing_up_min_characters_name(self):
         fail_payload = self.seed_payloads_new_user
         fail_payload.update({
             'name': 'a'
@@ -189,7 +195,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_max_characters_last_name(self):
+    def test_sing_up_max_characters_last_name(self):
         fail_payload = self.seed_payloads_new_user
         fail_payload.update({
             'last_name': 'sdkdkdflkmvdlfmldskdknfknkvfkdfsdkdkdflkmvdlfmldskdknfknkvfkdfsdkdkdflk'
@@ -202,7 +208,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_min_characters_last_name(self):
+    def test_sing_up_min_characters_last_name(self):
         fail_payload = self.seed_payloads_new_user
         fail_payload.update({
             'last_name': 'a'
@@ -215,7 +221,7 @@ class TestNewUser(BaseTestClass):
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_new_user_without_header_json(self):
+    def test_sing_up_without_header_json(self):
         response = self.api.post(url,
                                  headers={'Content-Type': 'application/xml'},
                                  json=self.seed_payloads_new_user)

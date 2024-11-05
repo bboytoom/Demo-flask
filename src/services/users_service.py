@@ -1,4 +1,5 @@
 import os
+import uuid
 import bcrypt
 import logging
 
@@ -27,6 +28,7 @@ class UserService:
                 birth_day = None
 
             _data.update({
+                'uuid': uuid.uuid4(),
                 'birth_day': birth_day
                 })
 
