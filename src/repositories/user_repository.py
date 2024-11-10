@@ -18,7 +18,9 @@ class UserRepository:
                     User.password_hash,
                     User.name,
                     User.last_name,
-                    User.birth_day
+                    User.birth_day,
+                    User.created_at,
+                    User.updated_at
                     ).filter(and_(User.email == _email, User.status)))
 
             return query.first()
@@ -38,7 +40,9 @@ class UserRepository:
                     name=_data.get('name'),
                     last_name=_data.get('last_name'),
                     birth_day=_data.get('birth_day', None),
-                    status=_data.get('status', True))
+                    status=_data.get('status', True),
+                    created_at=_data.get('created_at'),
+                    updated_at=_data.get('updated_at'))
 
     def add(self, _data: dict) -> User:
         if len(_data) == 0:

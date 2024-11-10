@@ -3,6 +3,8 @@ import uuid
 import bcrypt
 import logging
 
+from datetime import datetime
+
 from src.schemas import create_user_response
 from src.repositories import UserRepository
 from src.helpers import CryptographyMessage
@@ -29,7 +31,9 @@ class UserService:
 
             _data.update({
                 'uuid': uuid.uuid4(),
-                'birth_day': birth_day
+                'birth_day': birth_day,
+                'created_at': datetime.now(),
+                'updated_at': datetime.now()
                 })
 
             return create_user_response.dump(cls._user_repository.add(_data))

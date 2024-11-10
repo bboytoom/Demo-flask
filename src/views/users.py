@@ -1,6 +1,9 @@
 from flask import jsonify
 from flask.views import MethodView
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
+
+from src.services import AuthService
+from src.decorators import validate_token_user
 
 
 class Users(MethodView):
@@ -8,16 +11,8 @@ class Users(MethodView):
     Endpoint for user information management
     """
 
-    @jwt_required()
-    def get(self, user_uuid):
-        current_user = get_jwt_identity()
+    decorators = [jwt_required()]
 
-        print('\n --------------------\n')
-        print(user_uuid, 'uuid')
-        print('\n --------------------\n')
-        print(current_user, 'token')
-        print('\n --------------------\n')
-
-        return jsonify(
-            data={}
-            ), 200
+    @validate_token_user(AuthService, cls=True)
+    def get(self, user):
+        return jsonify(data=user), 200

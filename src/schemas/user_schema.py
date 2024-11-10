@@ -81,5 +81,8 @@ class UserSchema(Schema):
         return value
 
 
+user_response = UserSchema(only=('uuid', 'email', 'name', 'last_name',
+                                 'birth_day', 'created_at', 'updated_at',))
+
 create_user_response = UserSchema(only=('uuid',))
 authorize_user_response = UserSchema(only=('uuid', 'name', 'last_name', 'birth_day',))

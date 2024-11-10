@@ -6,8 +6,8 @@ from flask_jwt_extended import JWTManager
 
 class JWTConfig:
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', None)
-    JWT_ACCESS_TOKEN_EXPIRES = 60  # 10800
-    JWT_REFRESH_TOKEN_EXPIRES = 600  # 864000
+    JWT_ACCESS_TOKEN_EXPIRES = 10800
+    JWT_REFRESH_TOKEN_EXPIRES = 864000
     JWT_ALGORITHM = 'HS512'
 
 

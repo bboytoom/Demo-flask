@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from flask_jwt_extended import create_access_token, create_refresh_token
 
-from src.schemas import authorize_user_response
+from src.schemas import user_response, authorize_user_response
 from src.repositories import UserRepository
 from src.helpers import CryptographyMessage
 
@@ -42,21 +42,10 @@ class AuthService:
             if _password and not cls._verify_password(_password, user.password_hash):
                 return {'authorize': False}
 
-            column_names = ['uuid', 'email', 'password_hash', 'name', 'last_name', 'birth_day']
-            data_dict = dict(zip(column_names, user))
-
-            data_dict['name'] = cls._security_field.decrypt(user.name)
-            data_dict['last_name'] = cls._security_field.decrypt(user.last_name)
-
-            if user.birth_day:
-                birth_day_decrypt = cls._security_field.decrypt(user.birth_day)
-                data_dict['birth_day'] = datetime.strptime(birth_day_decrypt, '%Y-%m-%d')
-
-            user_object = cls._user_repository.create_object(data_dict)
-            credentials = authorize_user_response.dump(user_object)
-
             access_token = create_access_token(identity=user.email)
             refresh_token = create_refresh_token(identity=user.email)
+
+            credentials = authorize_user_response.dump(cls._user_format(user))
 
             credentials.update({
                 'authorize': True,
@@ -69,6 +58,32 @@ class AuthService:
             return credentials
         except Exception as e:
             logging.error(f'Error new_credentials: {e}')
+
+    @classmethod
+    def verify_the_same_token_user(cls, _email: str, _user_uuid: str) -> dict:
+        user = cls._user_repository.get_user_by_email(_email)
+
+        if not (user.uuid == _user_uuid):
+            return None
+
+        return user_response.dump(cls._user_format(user))
+
+    @classmethod
+    def _user_format(cls, _data):
+        column_names = ['uuid', 'email', 'password_hash', 'name', 'last_name', 'birth_day',
+                        'created_at', 'updated_at']
+
+        data_dict = dict(zip(column_names, _data))
+
+        data_dict['email'] = cls._security_field.decrypt(_data.email)
+        data_dict['name'] = cls._security_field.decrypt(_data.name)
+        data_dict['last_name'] = cls._security_field.decrypt(_data.last_name)
+
+        if _data.birth_day:
+            birth_day_decrypt = cls._security_field.decrypt(_data.birth_day)
+            data_dict['birth_day'] = datetime.strptime(birth_day_decrypt, '%Y-%m-%d')
+
+        return cls._user_repository.create_object(data_dict)
 
     @staticmethod
     def _verify_password(_password: str, _hashed_password: str) -> bool:

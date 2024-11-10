@@ -1,1 +1,1 @@
-from .endpoint_validation import validator_body  # noqa: F401
+from .endpoint_validation import validator_body, validate_token_user  # noqa: F401
