@@ -3,4 +3,4 @@ from .handler_errors import (page_not_found, internal_server_error,  # noqa: F40
                              method_not_allow_handler, unprocessable_entity,  # noqa: F401
                              conflict_handler, unauthorized, forbidden)  # noqa: F401
 
-from .security import CryptographyMessage  # noqa: F401
+from .security import CryptographyMessage, auth  # noqa: F401

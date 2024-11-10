@@ -28,7 +28,7 @@ def expired_token_callback(_jwt_header, _jwt_payload):
 def invalid_token_callback(_jwt_header, _jwt_payload):
     return jsonify(
         error='Unauthorized',
-        exception='the invalid token',
+        exception='The invalid token',
         path=request.path,
         method=request.method
         ), 401

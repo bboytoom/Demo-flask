@@ -4,8 +4,10 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from src.decorators import validator_body
 from src.schemas import UserSchema, UserAuthorize
 from src.services import UserService, AuthService
+from src.helpers import auth
 
 
+@auth.login_required
 @validator_body(UserSchema)
 def sing_up(_data):
     user = UserService.create(_data)

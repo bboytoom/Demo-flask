@@ -8,6 +8,10 @@ headers = {'Content-Type': 'application/json'}
 class TestNewUser(BaseTestClass):
 
     def test_sing_up_success(self):
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=self.seed_payloads_new_user)
         response_data = response.get_json()
 
@@ -19,6 +23,10 @@ class TestNewUser(BaseTestClass):
         self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
 
     def test_sing_up_exists_user(self):
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=self.seed_payloads_new_user)
         response = self.api.post(url,  headers=headers, json=self.seed_payloads_new_user)
 
@@ -27,6 +35,10 @@ class TestNewUser(BaseTestClass):
     def test_sing_up_without_birth_day(self):
         arrange = self.seed_payloads_new_user
         arrange.pop('birth_day')
+
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
 
         response = self.api.post(url,  headers=headers, json=arrange)
         response_data = response.get_json()
@@ -46,6 +58,10 @@ class TestNewUser(BaseTestClass):
             'email': ['Missing data for required field.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=arrange)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
@@ -59,6 +75,10 @@ class TestNewUser(BaseTestClass):
             'email': ['Not a valid email address.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
@@ -70,6 +90,10 @@ class TestNewUser(BaseTestClass):
             'password': ['Missing data for required field.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=arrange)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
@@ -80,6 +104,10 @@ class TestNewUser(BaseTestClass):
         expected_exceptions = {
             'password': ['Length must be between 8 and 30.']
             }
+
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
 
         for item in incorrect_test:
             fake_data['password'] = item
@@ -95,6 +123,10 @@ class TestNewUser(BaseTestClass):
             'password': ['The password must have at least one capital letter.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         for item in incorrect_test:
             fake_data['password'] = item
 
@@ -108,6 +140,10 @@ class TestNewUser(BaseTestClass):
         expected_exceptions = {
             'password': ['The password must have at least one lowercase letter.']
             }
+
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
 
         for item in incorrect_test:
             fake_data['password'] = item
@@ -123,6 +159,10 @@ class TestNewUser(BaseTestClass):
             'password': ['The password must have at least one number.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         for item in incorrect_test:
             fake_data['password'] = item
 
@@ -137,6 +177,10 @@ class TestNewUser(BaseTestClass):
             'password': ['The password must have at least one special character.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         for item in incorrect_test:
             fake_data['password'] = item
 
@@ -150,6 +194,10 @@ class TestNewUser(BaseTestClass):
             'last_name': ['Missing data for required field.'],
             'name': ['Missing data for required field.']
             }
+
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
 
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
@@ -166,6 +214,10 @@ class TestNewUser(BaseTestClass):
             'name': ['Not a valid string.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
@@ -178,6 +230,10 @@ class TestNewUser(BaseTestClass):
         expected_exceptions = {
             'name': ['Length must be between 2 and 30.']
             }
+
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
 
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
@@ -192,6 +248,10 @@ class TestNewUser(BaseTestClass):
             'name': ['Length must be between 2 and 30.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
@@ -204,6 +264,10 @@ class TestNewUser(BaseTestClass):
         expected_exceptions = {
             'last_name': ['Length must be between 2 and 70.']
             }
+
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
 
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
@@ -218,12 +282,31 @@ class TestNewUser(BaseTestClass):
             'last_name': ['Length must be between 2 and 70.']
             }
 
+        headers.update({
+            'Authorization': f'Basic {self.credentials}'
+            })
+
         response = self.api.post(url,  headers=headers, json=fail_payload)
         self.assert_json_response(response, 'Unprocessable Entity', 422, expected_exceptions)
 
-    def test_sing_up_without_header_json(self):
-        response = self.api.post(url,
-                                 headers={'Content-Type': 'application/xml'},
-                                 json=self.seed_payloads_new_user)
+    def test_sing_up_without_authorized(self):
+        headers.pop('Authorization')
 
+        response = self.api.post(url, headers=headers, json=self.seed_payloads_new_user)
+        self.assert_json_response(response, 'Unauthorized', 401, None)
+
+    def test_sing_up_with_authorized_bad_token(self):
+        headers.update({
+            'Authorization': 'Basic HVXLzhVdz09OjUreS9CeVBwc3BFaUVrR3Y3VnF2RGsrVS9ZW'
+            })
+
+        response = self.api.post(url, headers=headers, json=self.seed_payloads_new_user)
+        self.assert_json_response(response, 'Unauthorized', 401, None)
+
+    def test_sing_up_without_header_json(self):
+        headers = {
+            'Content-Type': 'application/xml',
+            'Authorization': f'Basic {self.credentials}'}
+
+        response = self.api.post(url, headers=headers, json=self.seed_payloads_new_user)
         self.assert_json_response(response, 'Bad Request', 400, None)
