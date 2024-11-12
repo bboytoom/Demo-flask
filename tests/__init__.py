@@ -4,7 +4,7 @@ import unittest
 from base64 import b64encode
 
 from src import create_app
-from src.config.sqlalchemy_db import db
+from src.config.databases import db
 from src.helpers import CryptographyMessage
 
 from tests.custom_asserts import CustomAsserts

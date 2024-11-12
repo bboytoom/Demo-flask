@@ -1,5 +1,5 @@
 from flask import jsonify, abort
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 from src.decorators import validator_body
 from src.schemas import UserSchema, UserAuthorize
@@ -21,6 +21,7 @@ def sing_up(_data):
         ), 201
 
 
+@auth.login_required
 @validator_body(UserAuthorize)
 def login(_data):
     auth = AuthService.authorize(_data)
@@ -33,6 +34,21 @@ def login(_data):
     return jsonify(
         message='Successful request',
         data=auth
+        ), 200
+
+
+@jwt_required(verify_type=False)
+def logout():
+    token = get_jwt()
+
+    jti = token['jti']
+    ttype = token['type']
+
+    if not AuthService.remove_access_user(jti, ttype):
+        return abort(400, 'Error in logout')
+
+    return jsonify(
+        message='Successful request'
         ), 200
 
 

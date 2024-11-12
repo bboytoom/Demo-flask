@@ -50,8 +50,13 @@ def validator_body(schema, cls=False):
                 return abort(422, errors)
 
             if not cls:
-                return func(request.get_json(), *args, **kwargs)
+                return func(request.get_json())
 
-            return func(args[0], request.get_json(), *args, **kwargs)
+            if len(args) == 2:
+                user_original = args[1]
+            else:
+                user_original = None
+
+            return func(args[0], request.get_json(), user_original)
         return wrapper
     return validation

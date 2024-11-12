@@ -5,7 +5,7 @@ import logging
 
 from datetime import datetime
 
-from src.schemas import create_user_response
+from src.schemas import create_user_response, authorize_user_response
 from src.repositories import UserRepository
 from src.helpers import CryptographyMessage
 
@@ -44,6 +44,36 @@ class UserService:
                     }
 
             logging.error(f'Error create_user: {e}')
+
+    @classmethod
+    def update(cls, _user_uuid, _data: dict) -> dict:
+        try:
+            _data['name'] = cls._security_field.encrypt(_data.get('name'))
+            _data['last_name'] = cls._security_field.encrypt(_data.get('last_name'))
+
+            if _data.get('birth_day', None):
+                birth_day = cls._security_field.encrypt(_data.get('birth_day'))
+            else:
+                birth_day = None
+
+            _data.update({
+                'birth_day': birth_day,
+                'updated_at': datetime.now()
+                })
+
+            user = cls._user_repository.update_user_info(_user_uuid, _data)
+
+            user.uuid = _user_uuid
+            user.name = cls._security_field.decrypt(user.name)
+            user.last_name = cls._security_field.decrypt(user.last_name)
+
+            if user.birth_day:
+                birth_day_decrypt = cls._security_field.decrypt(user.birth_day)
+                user.birth_day = datetime.strptime(birth_day_decrypt, '%Y-%m-%d')
+
+            return authorize_user_response.dump(user)
+        except Exception as e:
+            logging.error(f'Error update: {e}')
 
     @staticmethod
     def _hash_password(_password: str) -> str:

@@ -85,6 +85,17 @@ class AuthService:
 
         return cls._user_repository.create_object(data_dict)
 
+    @classmethod
+    def remove_access_user(cls, _jti, _ttype):
+        try:
+            cls._user_repository.blacklist_jwt(_jti, _ttype)
+        except Exception as e:
+            logging.error(f'Error get new token: {e}')
+
+            return False
+
+        return True
+
     @staticmethod
     def _verify_password(_password: str, _hashed_password: str) -> bool:
         combined_password = _password + os.environ.get('SECRET_KEY')

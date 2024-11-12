@@ -3,7 +3,7 @@ import logging
 from sqlalchemy import and_
 from sqlalchemy.exc import NoResultFound, DataError, IntegrityError
 
-from src.config import db
+from src.config import db, jwt_blacklist, ACCESS_EXPIRES
 from src.models import User
 
 
@@ -68,3 +68,28 @@ class UserRepository:
             raise
 
         return _data
+
+    def update_user_info(self, _user_uuid, _data: dict) -> User:
+        if len(_data) == 0:
+            raise NoResultFound('The model is empty.')
+
+        try:
+            db.session.query(User).filter_by(uuid=_user_uuid).update(_data)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f'Error update user info: {e}')
+
+            raise
+
+        return self.create_object(_data)
+
+    def blacklist_jwt(self, _jti, _ttype):
+        try:
+            jwt_blacklist.set(_jti, _ttype,  ex=ACCESS_EXPIRES)
+        except Exception as e:
+            logging.error(f'Error remove web token: {e}')
+
+            raise
+
+        return True

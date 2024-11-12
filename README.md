@@ -41,7 +41,7 @@ Ejemplo para implementar un proyecto en flask
     2. Levanta el proyecto en segundo plano
         - docker compose -f docker-compose.yaml -f docker-compose.services.yaml up -d 
     3. Para acceder al contenedor de la aplicación
-        - docker exec  -it backend-app /bin/bash
+        - docker exec -it backend-app /bin/bash
 * Para eliminar el proyecto necesitas el siguiente comando
     1. docker compose -f docker-compose.yaml -f docker-compose.services.yaml down
 
