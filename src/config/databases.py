@@ -14,5 +14,4 @@ jwt_blacklist = redis.StrictRedis(
     port=redis_port,
     password=redis_password,
     decode_responses=True,
-    db=0
-    )
+    db=0)

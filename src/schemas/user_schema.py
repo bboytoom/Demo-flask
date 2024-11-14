@@ -6,7 +6,7 @@ from marshmallow import Schema, fields, validate, validates, ValidationError
 class UserSchema(Schema):
 
     class Meta:
-        ordered = False
+        ordered = True
         name = 'user'
         plural_name = 'users'
 
@@ -84,5 +84,5 @@ class UserSchema(Schema):
 user_response = UserSchema(only=('uuid', 'email', 'name', 'last_name',
                                  'birth_day', 'created_at', 'updated_at',))
 
+user_info_response = UserSchema(only=('uuid', 'name', 'last_name', 'birth_day',))
 create_user_response = UserSchema(only=('uuid',))
-authorize_user_response = UserSchema(only=('uuid', 'name', 'last_name', 'birth_day',))

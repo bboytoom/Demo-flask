@@ -20,7 +20,8 @@ class UserRepository:
                     User.last_name,
                     User.birth_day,
                     User.created_at,
-                    User.updated_at
+                    User.updated_at,
+                    User.deleted_at
                     ).filter(and_(User.email == _email, User.status)))
 
             return query.first()
@@ -69,7 +70,7 @@ class UserRepository:
 
         return _data
 
-    def update_user_info(self, _user_uuid, _data: dict) -> User:
+    def update_user(self, _user_uuid: str, _data: dict) -> User:
         if len(_data) == 0:
             raise NoResultFound('The model is empty.')
 
@@ -83,6 +84,18 @@ class UserRepository:
             raise
 
         return self.create_object(_data)
+
+    def remove_user(self, _user_uuid: str, _data) -> None:
+        try:
+            db.session.query(User).filter_by(uuid=_user_uuid).update(_data)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f'Error remove user info: {e}')
+
+            raise
+
+        return None
 
     def blacklist_jwt(self, _jti, _ttype):
         try:

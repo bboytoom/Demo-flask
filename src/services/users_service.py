@@ -5,7 +5,7 @@ import logging
 
 from datetime import datetime
 
-from src.schemas import create_user_response, authorize_user_response
+from src.schemas import create_user_response, user_info_response
 from src.repositories import UserRepository
 from src.helpers import CryptographyMessage
 
@@ -46,7 +46,7 @@ class UserService:
             logging.error(f'Error create_user: {e}')
 
     @classmethod
-    def update(cls, _user_uuid, _data: dict) -> dict:
+    def update_info(cls, _user_uuid, _data: dict) -> dict:
         try:
             _data['name'] = cls._security_field.encrypt(_data.get('name'))
             _data['last_name'] = cls._security_field.encrypt(_data.get('last_name'))
@@ -61,7 +61,7 @@ class UserService:
                 'updated_at': datetime.now()
                 })
 
-            user = cls._user_repository.update_user_info(_user_uuid, _data)
+            user = cls._user_repository.update_user(_user_uuid, _data)
 
             user.uuid = _user_uuid
             user.name = cls._security_field.decrypt(user.name)
@@ -71,9 +71,20 @@ class UserService:
                 birth_day_decrypt = cls._security_field.decrypt(user.birth_day)
                 user.birth_day = datetime.strptime(birth_day_decrypt, '%Y-%m-%d')
 
-            return authorize_user_response.dump(user)
+            return user_info_response.dump(user)
         except Exception as e:
             logging.error(f'Error update: {e}')
+
+    @classmethod
+    def remove(cls, _data: dict) -> None:
+        remove_data = {
+            'deleted_at': datetime.now()
+            }
+
+        try:
+            return cls._user_repository.remove_user(_data.get('uuid'), remove_data)
+        except Exception as e:
+            logging.error(f'Error remove: {e}')
 
     @staticmethod
     def _hash_password(_password: str) -> str:

@@ -26,10 +26,8 @@ def sing_up(_data):
 def login(_data):
     auth = AuthService.authorize(_data)
 
-    if not auth.get('authorize', False):
+    if len(auth) == 0:
         return abort(401, 'Error in password or email')
-
-    auth.pop('authorize')
 
     return jsonify(
         message='Successful request',

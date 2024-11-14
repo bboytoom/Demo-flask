@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from flask_jwt_extended import create_access_token, create_refresh_token
 
-from src.schemas import user_response, authorize_user_response
+from src.schemas import user_response, user_info_response
 from src.repositories import UserRepository
 from src.helpers import CryptographyMessage
 
@@ -25,7 +25,16 @@ class AuthService:
     @classmethod
     def authorize(cls, _data: dict) -> dict:
         try:
-            return cls._new_credentials(_data.get('email'), _data.get('password'))
+            auth = cls._new_credentials(_data.get('email'), _data.get('password'))
+
+            print(auth, 'auth')
+
+            if not auth.get('authorize', None):
+                return {}
+
+            auth.pop('authorize')
+
+            return auth
         except Exception as e:
             logging.error(f'Error authorize: {e}')
 
@@ -39,13 +48,24 @@ class AuthService:
 
             user = cls._user_repository.get_user_by_email(email_encrypt)
 
+            if not user:
+                return {'authorize': False}
+
             if _password and not cls._verify_password(_password, user.password_hash):
                 return {'authorize': False}
+
+            if _password and user.deleted_at:
+                data = {
+                    'deleted_at': None,
+                    'updated_at': datetime.now()
+                    }
+
+                cls._user_repository.update_user(user.uuid, data)
 
             access_token = create_access_token(identity=user.email)
             refresh_token = create_refresh_token(identity=user.email)
 
-            credentials = authorize_user_response.dump(cls._user_format(user))
+            credentials = user_info_response.dump(cls._user_format(user))
 
             credentials.update({
                 'authorize': True,
@@ -62,6 +82,9 @@ class AuthService:
     @classmethod
     def verify_the_same_token_user(cls, _email: str, _user_uuid: str) -> dict:
         user = cls._user_repository.get_user_by_email(_email)
+
+        if not user:
+            return None
 
         if not (user.uuid == _user_uuid):
             return None

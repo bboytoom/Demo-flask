@@ -15,3 +15,9 @@ users.add_url_rule(
     view_func=Users.as_view('update_user'),
     methods=['PATCH']
     )
+
+users.add_url_rule(
+    '/<uuid:user_uuid>',
+    view_func=Users.as_view('remove_user'),
+    methods=['DELETE']
+    )

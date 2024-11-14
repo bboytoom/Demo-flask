@@ -37,5 +37,10 @@ class User(db.Model):
         onupdate=datetime.now,
         default=datetime.now)
 
+    deleted_at = db.Column(
+        db.DateTime,
+        nullable=True,
+        default=None)
+
     def __repr__(self):
         return f'User({self.uuid}, {self.email}, {self.name}, {self.last_name}, {self.birth_day})'

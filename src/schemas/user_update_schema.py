@@ -4,7 +4,7 @@ from marshmallow import Schema, fields, validate, validates, ValidationError
 class UserUpdateSchema(Schema):
 
     class Meta:
-        ordered = False
+        ordered = True
         name = 'user'
         plural_name = 'users'
 
