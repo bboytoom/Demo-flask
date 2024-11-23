@@ -1,5 +1,5 @@
 from flask import jsonify, abort
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 
 from src.decorators import validator_body
 from src.schemas import UserSchema, UserAuthorize
@@ -9,7 +9,7 @@ from src.helpers import auth
 
 @auth.login_required
 @validator_body(UserSchema)
-def sing_up(_data):
+def sing_up(_data, _):
     user = UserService.create(_data)
 
     if user.get('code', None) == 409:
@@ -23,7 +23,7 @@ def sing_up(_data):
 
 @auth.login_required
 @validator_body(UserAuthorize)
-def login(_data):
+def login(_data, _):
     auth = AuthService.authorize(_data)
 
     if len(auth) == 0:
@@ -52,9 +52,9 @@ def logout():
 
 @jwt_required(refresh=True)
 def refresh():
-    email = get_jwt_identity()
+    user_uuid = get_jwt_identity()
 
-    auth = AuthService.get_new_token(email)
+    auth = AuthService.get_new_token(user_uuid)
     auth.pop('authorize')
 
     return jsonify(

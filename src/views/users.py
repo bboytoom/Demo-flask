@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, abort
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt
 
@@ -14,31 +14,41 @@ class Users(MethodView):
 
     decorators = [jwt_required()]
 
-    @validate_token_user(AuthService, cls=True)
-    def get(self, _user):
-        return jsonify(
-            message='Successful request',
-            data=_user
-            ), 200
+    @validate_token_user(cls=True)
+    def get(self, _user_uuid):
+        user = UserService.retrieve(_user_uuid)
 
-    @validate_token_user(AuthService, cls=True)
-    @validator_body(UserUpdateSchema, cls=True)
-    def patch(self, _user, *args):
-        user = UserService.update_info(args[0]['uuid'], _user)
+        if len(user) == 0:
+            return abort(404, 'The user does not exists')
 
         return jsonify(
             message='Successful request',
             data=user
             ), 200
 
-    @validate_token_user(AuthService, cls=True)
-    def delete(self, _user):
+    @validate_token_user(cls=True)
+    @validator_body(UserUpdateSchema, cls=True)
+    def patch(self, _data, *args):
+        user = UserService.update_info(args[0][1], _data)
+
+        return jsonify(
+            message='Successful request',
+            data=user
+            ), 200
+
+    @validate_token_user(cls=True)
+    def delete(self, _user_uuid):
         token = get_jwt()
 
         jti = token['jti']
         ttype = token['type']
 
-        UserService.remove(_user)
+        user = UserService.retrieve(_user_uuid)
+
+        if len(user) == 0:
+            return abort(404, 'The user does not exists')
+
+        UserService.remove(_user_uuid)
         AuthService.remove_access_user(jti, ttype)
 
         return '', 204

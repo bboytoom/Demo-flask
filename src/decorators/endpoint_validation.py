@@ -4,27 +4,26 @@ from flask import request, abort
 from flask_jwt_extended import get_jwt_identity
 
 
-def validate_token_user(AuthService, cls=False):
+def validate_token_user(cls=False):
     """
     Decorator function that validates token and user_uuid
     """
+
     # Sub function
     def validation(func):
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            email = get_jwt_identity()
+            token_identifier = get_jwt_identity()
             user_uuid = kwargs.get('user_uuid', None)
 
-            user = AuthService.verify_the_same_token_user(email, str(user_uuid))
-
-            if not user:
+            if token_identifier != str(user_uuid):
                 return abort(404, 'The user does not exists')
 
             if not cls:
-                return func(user)
+                return func(token_identifier)
 
-            return func(args[0], user)
+            return func(args[0], token_identifier)
         return wrapper
     return validation
 
@@ -49,13 +48,13 @@ def validator_body(schema, cls=False):
             if errors:
                 return abort(422, errors)
 
-            if not cls:
-                return func(request.get_json())
-
-            if len(args) == 2:
-                user_original = args[1]
-            else:
+            if len(args) == 0:
                 user_original = None
+            else:
+                user_original = args
+
+            if not cls:
+                return func(request.get_json(), user_original)
 
             return func(args[0], request.get_json(), user_original)
         return wrapper

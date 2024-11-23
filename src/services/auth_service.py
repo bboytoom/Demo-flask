@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from flask_jwt_extended import create_access_token, create_refresh_token
 
-from src.schemas import user_response, user_info_response
+from src.schemas import user_info_response
 from src.repositories import UserRepository
 from src.helpers import CryptographyMessage
 
@@ -16,80 +16,65 @@ class AuthService:
     _security_field = CryptographyMessage()
 
     @classmethod
-    def get_new_token(cls, _email: str) -> dict:
+    def get_new_token(cls, _user_uuid: str) -> dict:
+        user = cls._user_repository.get_user_by_uuid(_user_uuid)
+
         try:
-            return cls._new_credentials(_email, None)
+            return cls._new_credentials(user, None)
         except Exception as e:
             logging.error(f'Error get new token: {e}')
 
     @classmethod
     def authorize(cls, _data: dict) -> dict:
         try:
-            auth = cls._new_credentials(_data.get('email'), _data.get('password'))
+            email_encrypt = cls._security_field.encrypt(_data.get('email'))
+            user = cls._user_repository.get_user_by_email(email_encrypt)
 
-            print(auth, 'auth')
-
-            if not auth.get('authorize', None):
+            if not user:
                 return {}
 
-            auth.pop('authorize')
+            credentials = cls._new_credentials(user, _data.get('password'))
 
-            return auth
+            if not credentials.get('authorize', None):
+                return {}
+
+            credentials.pop('authorize')
+
+            return credentials
         except Exception as e:
             logging.error(f'Error authorize: {e}')
 
     @classmethod
-    def _new_credentials(cls, _email: str, _password: str | None) -> dict:
-        try:
-            if _password:
-                email_encrypt = cls._security_field.encrypt(_email)
-            else:
-                email_encrypt = _email
+    def _new_credentials(cls, _user: dict, _password: str | None) -> dict:
+        if _password and not cls._verify_password(_password, _user.password_hash):
+            return {'authorize': False}
 
-            user = cls._user_repository.get_user_by_email(email_encrypt)
+        if _password and _user.deleted_at:
+            data = {
+                'deleted_at': None,
+                'updated_at': datetime.now()
+                }
 
-            if not user:
-                return {'authorize': False}
+            cls._user_repository.update_user(_user.uuid, data)
 
-            if _password and not cls._verify_password(_password, user.password_hash):
-                return {'authorize': False}
+        add_claims = {
+            'email': _user.email
+            }
 
-            if _password and user.deleted_at:
-                data = {
-                    'deleted_at': None,
-                    'updated_at': datetime.now()
-                    }
+        access_token = create_access_token(identity=_user.uuid, additional_claims=add_claims)
+        refresh_token = create_refresh_token(identity=_user.uuid, additional_claims=add_claims)
 
-                cls._user_repository.update_user(user.uuid, data)
+        credentials = user_info_response.dump(cls._user_format(_user))
 
-            access_token = create_access_token(identity=user.email)
-            refresh_token = create_refresh_token(identity=user.email)
+        credentials.update({
+            'authorize': True,
+            'access_token': access_token,
+            'refresh_token': refresh_token,
+            'expires_in': 10800,
+            'token_type': 'Bearer'
+            })
 
-            credentials = user_info_response.dump(cls._user_format(user))
-
-            credentials.update({
-                'authorize': True,
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-                'expires_in': 10800,
-                'token_type': 'Bearer'
-                })
-
-            return credentials
-        except Exception as e:
-            logging.error(f'Error new_credentials: {e}')
-
-    @classmethod
-    def verify_the_same_token_user(cls, _email: str, _user_uuid: str) -> dict:
-        user = cls._user_repository.get_user_by_email(_email)
-
-        if not user:
-            return None
-
-        if not (user.uuid == _user_uuid):
-            return None
-
-        return user_response.dump(cls._user_format(user))
+        return credentials
 
     @classmethod
     def _user_format(cls, _data):

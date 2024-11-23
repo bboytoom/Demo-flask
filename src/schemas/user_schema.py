@@ -86,3 +86,4 @@ user_response = UserSchema(only=('uuid', 'email', 'name', 'last_name',
 
 user_info_response = UserSchema(only=('uuid', 'name', 'last_name', 'birth_day',))
 create_user_response = UserSchema(only=('uuid',))
+email_user_response = UserSchema(only=('uuid', 'email',))

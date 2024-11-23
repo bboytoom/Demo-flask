@@ -9,7 +9,26 @@ from src.models import User
 
 class UserRepository:
 
+    def exists_email(self, _user_uuid: str, _email: str) -> bool:
+        try:
+            query = (
+                db.session.query(
+                    User.email
+                    ).filter(and_(User.email == _email, User.uuid != _user_uuid)))
+
+            return False if not query.first() else True
+        except Exception as e:
+            logging.error(f'Search User error: {e}')
+
+            raise
+
+    def get_user_by_uuid(self, _user_uuid: str) -> User:
+        return self._get_user('uuid', _user_uuid)
+
     def get_user_by_email(self, _email: str) -> User:
+        return self._get_user('email', _email)
+
+    def _get_user(self, filter_by: str, value: str) -> User:
         try:
             query = (
                 db.session.query(
@@ -22,7 +41,7 @@ class UserRepository:
                     User.created_at,
                     User.updated_at,
                     User.deleted_at
-                    ).filter(and_(User.email == _email, User.status)))
+                    ).filter(and_(getattr(User, filter_by) == value, User.status)))
 
             return query.first()
         except NoResultFound:
