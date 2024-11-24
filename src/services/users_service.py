@@ -59,6 +59,18 @@ class UserService:
             logging.error(f'Error create_user: {e}')
 
     @classmethod
+    def update_password(cls, _user_uuid: str, _data: dict) -> None:
+
+        update_password = {
+            'password_hash': cls._hash_password(_data.get('password')),
+            'updated_at': datetime.now()
+            }
+
+        cls._user_repository.update_user(_user_uuid, update_password)
+
+        return None
+
+    @classmethod
     def update_email(cls, _user_uuid: str, _data: dict) -> dict:
         email = cls._security_field.encrypt(_data.get('email'))
         exists_email = cls._user_repository.exists_email(_user_uuid, email)
