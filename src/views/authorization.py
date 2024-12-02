@@ -27,7 +27,7 @@ def login(_data, _):
     auth = AuthService.authorize(_data)
 
     if len(auth) == 0:
-        return abort(401, 'Error in password or email')
+        return abort(422, {'Login': 'Error in password or email.'})
 
     return jsonify(
         message='Successful request',

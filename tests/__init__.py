@@ -8,7 +8,7 @@ from src.config.databases import db
 from src.helpers import CryptographyMessage
 
 from tests.custom_asserts import CustomAsserts
-from tests.factory_test import payload_create_new_user
+from tests.factory_test import payload_create_new_user, payload_password, result_access_user
 
 
 class BaseTestClass(unittest.TestCase, CustomAsserts):
@@ -27,6 +27,10 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
 
         # Seed
         self.seed_payloads_new_user = payload_create_new_user()
+        self.seed_payloads_password = payload_password()
+
+        # Responses
+        self.response_access_user = result_access_user()
 
         # Auth
         credential_string = f'{(qa_username)}:{qa_password}'

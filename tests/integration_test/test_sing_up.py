@@ -5,7 +5,7 @@ url = '/api/v1/sing_up'
 headers = {'Content-Type': 'application/json'}
 
 
-class TestNewUser(BaseTestClass):
+class TestSingUp(BaseTestClass):
 
     def test_sing_up_success(self):
         headers.update({
