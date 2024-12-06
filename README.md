@@ -32,6 +32,9 @@ Ejemplo para implementar un proyecto en flask
     - python -m unittest directory/test.py -k test_function *”(ejecuta un test especifico)”*
     - NOTA: **Cada vez que se ejecutan los test se elimina la base de datos**
 
+* Para ejecutar el test coverage 
+    - coverage run -m unittest discover
+    - coverage report
 
 
 #### Docker

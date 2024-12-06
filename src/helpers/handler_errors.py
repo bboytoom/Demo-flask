@@ -4,7 +4,7 @@ from flask import jsonify, request
 def bad_request_handler(e):
     return jsonify(
         error=e.name,
-        exception=str(e),
+        exception=e.description,
         path=request.path,
         method=request.method
         ), 400
@@ -22,7 +22,7 @@ def unauthorized(e):
 def forbidden(e):
     return jsonify(
         error=e.name,
-        exception=str(e),
+        exception=e.description,
         path=request.path,
         method=request.method
         ), 403
@@ -31,7 +31,7 @@ def forbidden(e):
 def page_not_found(e):
     return jsonify(
         error=e.name,
-        exception=str(e),
+        exception=e.description,
         path=request.path,
         method=request.method
         ), 404
@@ -40,7 +40,7 @@ def page_not_found(e):
 def method_not_allow_handler(e):
     return jsonify(
         error=e.name,
-        exception=str(e),
+        exception=e.description,
         path=request.path,
         method=request.method
         ), 405
@@ -67,7 +67,7 @@ def unprocessable_entity(e):
 def rate_limit_handler(e):
     return jsonify(
         error=e.name,
-        exception=str(e),
+        exception=e.description,
         path=request.path,
         method=request.method
         ), 429
@@ -76,7 +76,7 @@ def rate_limit_handler(e):
 def internal_server_error(e):
     return jsonify(
         error=e.name,
-        exception=str(e),
+        exception=e.description,
         path=request.path,
         method=request.method
         ), 500

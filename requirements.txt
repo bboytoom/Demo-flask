@@ -5,6 +5,7 @@ certifi==2024.8.30
 cffi==1.17.1
 charset-normalizer==3.4.0
 click==8.1.7
+coverage==7.6.8
 cryptography==43.0.3
 Faker==30.8.1
 flake8==7.1.1

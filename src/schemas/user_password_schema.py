@@ -36,17 +36,22 @@ class UserPasswordSchema(Schema):
     @validates_schema
     def validate_passwords_match(self, data, **kwargs):
         if data.get('password') != data.get('password_confirmed'):
-            raise ValidationError({'password_confirmed': 'Passwords must match.'})
+            raise ValidationError({'password_confirmed': ['Passwords must match.']})
 
     def _validate_password(self, value):
+        errors = []
+
         if not re.search(r"[A-Z]", value):
-            raise ValidationError('The password must have at least one capital letter.')
+            errors.append('The password must have at least one capital letter.')
 
         if not re.search(r"[a-z]", value):
-            raise ValidationError('The password must have at least one lowercase letter.')
+            errors.append('The password must have at least one lowercase letter.')
 
         if not re.search(r"[0-9]", value):
-            raise ValidationError('The password must have at least one number.')
+            errors.append('The password must have at least one number.')
 
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", value):
-            raise ValidationError('The password must have at least one special character.')
+            errors.append('The password must have at least one special character.')
+
+        if len(errors) != 0:
+            raise ValidationError(errors)

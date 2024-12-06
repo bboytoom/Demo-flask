@@ -1,4 +1,5 @@
 from src.models.user import User
+
 from tests import BaseTestClass
 
 url = '/api/v1/sing_up'
