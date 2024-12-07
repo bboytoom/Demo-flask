@@ -19,13 +19,27 @@ class AuthService:
     def get_new_token(cls, _user_uuid: str) -> dict:
         user = cls._user_repository.get_user_by_uuid(_user_uuid)
 
+        if not user:
+            return {}
+
         try:
-            return cls._new_credentials(user, None)
+            credentials = cls._new_credentials(user, None)
+
+            if not credentials.get('authorize', None):
+                return {}
+
+            credentials.pop('authorize')
+
+            return credentials
         except Exception as e:
             logging.error(f'Error get new token: {e}')
 
     @classmethod
     def authorize(cls, _data: dict) -> dict:
+
+        if len(_data) == 0:
+            return {}
+
         try:
             email_encrypt = cls._security_field.encrypt(_data.get('email'))
             user = cls._user_repository.get_user_by_email(email_encrypt)

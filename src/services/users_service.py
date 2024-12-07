@@ -30,26 +30,34 @@ class UserService:
 
     @classmethod
     def create(cls, _data: dict) -> dict:
+        email = _data.get('email')
+        password = _data.get('password')
+        name = _data.get('name')
+        last_name = _data.get('last_name')
+        birth_day = _data.get('birth_day', None)
+
+        if not email or not password or not name or not last_name:
+            return {}
+
+        _data['password'] = cls._hash_password(password)
+        _data['email'] = cls._security_field.encrypt(email)
+        _data['name'] = cls._security_field.encrypt(name)
+        _data['last_name'] = cls._security_field.encrypt(last_name)
+
+        if birth_day:
+            birth = cls._security_field.encrypt(birth_day)
+        else:
+            birth = None
+
+        _data.update({
+            'uuid': uuid.uuid4(),
+            'birth_day': birth,
+            'created_at': datetime.now(),
+            'updated_at': datetime.now()
+            })
+
         try:
-            _data['password'] = cls._hash_password(_data.get('password'))
-
-            _data['email'] = cls._security_field.encrypt(_data.get('email'))
-            _data['name'] = cls._security_field.encrypt(_data.get('name'))
-            _data['last_name'] = cls._security_field.encrypt(_data.get('last_name'))
-
-            if _data.get('birth_day', None):
-                birth_day = cls._security_field.encrypt(_data.get('birth_day'))
-            else:
-                birth_day = None
-
-            _data.update({
-                'uuid': uuid.uuid4(),
-                'birth_day': birth_day,
-                'created_at': datetime.now(),
-                'updated_at': datetime.now()
-                })
-
-            return create_user_response.dump(cls._user_repository.add(_data))
+            insert_data = cls._user_repository.add(_data)
         except Exception as e:
             if e.args[0] == 'Duplicated data in database':
                 return {
@@ -57,6 +65,8 @@ class UserService:
                     }
 
             logging.error(f'Error create_user: {e}')
+
+        return create_user_response.dump(insert_data)
 
     @classmethod
     def update_password(cls, _user_uuid: str, _data: dict) -> None:

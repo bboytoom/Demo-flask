@@ -24,7 +24,6 @@ class TestRetrieveUser(BaseTestClass):
         expectative.pop('token_type')
 
         response = self.api.get(url + USER_UUID,  headers=headers)
-
         self.assert_json_response(response, 'Successful request', 200, expectative)
 
     def test_retrieve_user_without_user_uuid(self):

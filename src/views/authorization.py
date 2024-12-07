@@ -12,6 +12,9 @@ from src.helpers import auth
 def sing_up(_data, _):
     user = UserService.create(_data)
 
+    if len(user) == 0:
+        return abort(400, {'Sing_up': 'Error in sing_up.'})
+
     if user.get('code', None) == 409:
         return abort(409, 'The user does exists')
 
@@ -55,6 +58,10 @@ def refresh():
     user_uuid = get_jwt_identity()
 
     auth = AuthService.get_new_token(user_uuid)
+
+    if len(auth) == 0:
+        return abort(422, {'Refresh': 'Error in refresh token.'})
+
     auth.pop('authorize')
 
     return jsonify(

@@ -39,3 +39,15 @@ def result_access_user() -> dict:
         'token_type': 'Bearer',
         'uuid': '9bd82d2d-647f-4896-81ce-8055da610451'
         }
+
+
+def result_user() -> dict:
+    return {
+        'birth_day': '2000-11-16',
+        'created_at': '2024-12-01T21:46:56',
+        'email': 'test@example.com',
+        'last_name': 'ross',
+        'name': 'blisa',
+        'updated_at': '2024-12-01T21:46:56',
+        'uuid': '9bd82d2d-647f-4896-81ce-8055da610451'
+        }

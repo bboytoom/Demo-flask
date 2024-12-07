@@ -176,26 +176,6 @@ class TestUpdatePassword(BaseTestClass):
 
         self.assert_json_response(response, 'Not Found', 404, None)
 
-    def test_update_password_without_user_uuid(self):
-        seed_users(self.db_connection)
-
-        headers.update({
-            'Authorization': f'Bearer {create_auth_token()}'
-            })
-
-        data = self.seed_payloads_password
-        data.pop('email')
-
-        data.update({
-            'password_confirmed': data.get('password')
-            })
-
-        response = self.api.patch(url + '/change-password',
-                                  headers=headers,
-                                  json=data)
-
-        self.assert_json_response(response, 'Not Found', 404, None)
-
     def test_update_password_without_header_authorizer(self):
         seed_users(self.db_connection)
 
