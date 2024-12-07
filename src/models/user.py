@@ -2,6 +2,7 @@ import uuid
 
 from datetime import datetime
 
+from src.models.custom_columns import UUIDType
 from src.config import db
 
 
@@ -11,7 +12,7 @@ class User(db.Model):
         db.PrimaryKeyConstraint('uuid'),)
 
     uuid = db.Column(
-        db.CHAR(36),
+        UUIDType,
         primary_key=True,
         unique=True,
         index=True,

@@ -17,6 +17,9 @@ class AuthService:
 
     @classmethod
     def get_new_token(cls, _user_uuid: str) -> dict:
+        if not _user_uuid:
+            return {}
+
         user = cls._user_repository.get_user_by_uuid(_user_uuid)
 
         if not user:

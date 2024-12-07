@@ -7,7 +7,6 @@ from src.config.logger import CONFIG
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', None)
     JSON_SORT_KEYS = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_POOL_SIZE = 1
     SQLALCHEMY_MAX_OVERFLOW = 0
@@ -16,16 +15,19 @@ class Config:
 
 
 class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     DEBUG = True
     TESTING = False
 
 
 class TestingConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     DEBUG = True
     TESTING = True
 
 
 class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     DEBUG = False
     TESTING = False
 

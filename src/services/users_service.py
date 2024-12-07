@@ -18,6 +18,9 @@ class UserService:
 
     @classmethod
     def retrieve(cls, _user_uuid: str) -> dict:
+        if not _user_uuid:
+            return {}
+
         try:
             user = cls._user_repository.get_user_by_uuid(_user_uuid)
 

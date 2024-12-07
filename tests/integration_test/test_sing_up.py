@@ -1,3 +1,4 @@
+import uuid
 from src.models.user import User
 
 from tests import BaseTestClass
@@ -21,7 +22,7 @@ class TestSingUp(BaseTestClass):
             .first()
 
         self.assert_json_response(response, 'Successful request', 201, None)
-        self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
+        self.assertEqual(user_exists.uuid, uuid.UUID(response_data.get('user_uuid')))
 
     def test_sing_up_exists_user(self):
         headers.update({
@@ -49,7 +50,7 @@ class TestSingUp(BaseTestClass):
             .first()
 
         self.assert_json_response(response, 'Successful request', 201, None)
-        self.assertEqual(user_exists.uuid, response_data.get('user_uuid'))
+        self.assertEqual(user_exists.uuid, uuid.UUID(response_data.get('user_uuid')))
 
     def test_sing_up_without_email(self):
         arrange = self.seed_payloads_new_user
