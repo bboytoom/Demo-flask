@@ -1,6 +1,6 @@
-import re
-
 from marshmallow import Schema, fields, validate, validates, ValidationError
+
+from .utilities_schema import password_field, validate_password
 
 
 class UserSchema(Schema):
@@ -19,14 +19,7 @@ class UserSchema(Schema):
             ]
         )
 
-    password_hash = fields.Str(
-        load_only=True,
-        data_key='password',
-        required=True,
-        validate=[
-            validate.Length(min=8, max=30)
-            ]
-        )
+    password = password_field
 
     name = fields.Str(
         required=True,
@@ -64,19 +57,9 @@ class UserSchema(Schema):
 
         raise ValidationError('The last_name is invalid.')
 
-    @validates('password_hash')
+    @validates('password')
     def is_valid_password(self, value):
-        if not re.search(r"[A-Z]", value):
-            raise ValidationError('The password must have at least one capital letter.')
-
-        if not re.search(r"[a-z]", value):
-            raise ValidationError('The password must have at least one lowercase letter.')
-
-        if not re.search(r"[0-9]", value):
-            raise ValidationError('The password must have at least one number.')
-
-        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", value):
-            raise ValidationError('The password must have at least one special character.')
+        validate_password(value)
 
         return value
 

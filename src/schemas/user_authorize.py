@@ -1,4 +1,6 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema
+
+from .utilities_schema import password_field, email_field
 
 
 class UserAuthorize(Schema):
@@ -8,19 +10,5 @@ class UserAuthorize(Schema):
         name = 'user'
         plural_name = 'users'
 
-    email = fields.Email(
-        load_only=True,
-        required=True,
-        validate=[
-            validate.Length(min=8, max=70)
-            ]
-        )
-
-    password_hash = fields.Str(
-        load_only=True,
-        data_key='password',
-        required=True,
-        validate=[
-            validate.Length(min=8, max=30)
-            ]
-        )
+    email = email_field
+    password = password_field

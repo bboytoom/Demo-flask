@@ -113,7 +113,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"Successful request\",\n    \"user_uuid\": \"1ff9e2e0-2c00-419e-87ac-3e08a44c9ac9\"\n}"
+							"body": "{\n    \"message\": \"Successful request\",\n    \"data\": {\n        \"user_uuid\": \"1ff9e2e0-2c00-419e-87ac-3e08a44c9ac9\"\n    }\n}"
 						}
 					]
 				},

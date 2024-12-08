@@ -36,6 +36,9 @@ Ejemplo para implementar un proyecto en flask
     - coverage run -m unittest discover
     - coverage report
 
+* Para ejecutar el code scan
+    - bandit -r src/
+
 
 #### Docker
 * Si necesitas usar Docker, puedes levantar el proyecto de la siguiente manera

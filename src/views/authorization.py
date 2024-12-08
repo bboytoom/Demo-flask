@@ -20,7 +20,9 @@ def sing_up(_data, _):
 
     return jsonify(
         message='Successful request',
-        user_uuid=user.get('uuid')
+        data={
+            'uuid': user.get('uuid')
+            }
         ), 201
 
 

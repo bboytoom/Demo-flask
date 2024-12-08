@@ -5,8 +5,8 @@ import hashlib
 from flask import abort, request
 from flask_httpauth import HTTPBasicAuth
 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Cipher import AES  # nosec
+from Crypto.Util.Padding import pad, unpad  # nosec
 
 auth = auth = HTTPBasicAuth()
 

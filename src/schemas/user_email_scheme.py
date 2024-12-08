@@ -1,4 +1,6 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema
+
+from .utilities_schema import email_field
 
 
 class UserEmailSchema(Schema):
@@ -8,10 +10,4 @@ class UserEmailSchema(Schema):
         name = 'user'
         plural_name = 'users'
 
-    email = fields.Email(
-        load_only=True,
-        required=True,
-        validate=[
-            validate.Length(min=8, max=70)
-            ]
-        )
+    email = email_field

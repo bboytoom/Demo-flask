@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from flask_jwt_extended import create_access_token, create_refresh_token
 
+from .utilities_service import user_format
 from src.schemas import user_info_response
 from src.repositories import UserRepository
 from src.helpers import CryptographyMessage
@@ -25,17 +26,14 @@ class AuthService:
         if not user:
             return {}
 
-        try:
-            credentials = cls._new_credentials(user, None)
+        credentials = cls._new_credentials(user, None)
 
-            if not credentials.get('authorize', None):
-                return {}
+        if not credentials.get('authorize', None):
+            return {}
 
-            credentials.pop('authorize')
+        credentials.pop('authorize')
 
-            return credentials
-        except Exception as e:
-            logging.error(f'Error get new token: {e}')
+        return credentials
 
     @classmethod
     def authorize(cls, _data: dict) -> dict:
@@ -43,23 +41,20 @@ class AuthService:
         if len(_data) == 0:
             return {}
 
-        try:
-            email_encrypt = cls._security_field.encrypt(_data.get('email'))
-            user = cls._user_repository.get_user_by_email(email_encrypt)
+        email_encrypt = cls._security_field.encrypt(_data.get('email'))
+        user = cls._user_repository.get_user_by_email(email_encrypt)
 
-            if not user:
-                return {}
+        if not user:
+            return {}
 
-            credentials = cls._new_credentials(user, _data.get('password'))
+        credentials = cls._new_credentials(user, _data.get('password'))
 
-            if not credentials.get('authorize', None):
-                return {}
+        if not credentials.get('authorize', None):
+            return {}
 
-            credentials.pop('authorize')
+        credentials.pop('authorize')
 
-            return credentials
-        except Exception as e:
-            logging.error(f'Error authorize: {e}')
+        return credentials
 
     @classmethod
     def _new_credentials(cls, _user: dict, _password: str | None) -> dict:
@@ -81,7 +76,7 @@ class AuthService:
         access_token = create_access_token(identity=_user.uuid, additional_claims=add_claims)
         refresh_token = create_refresh_token(identity=_user.uuid, additional_claims=add_claims)
 
-        credentials = user_info_response.dump(cls._user_format(_user))
+        credentials = user_info_response.dump(user_format(_user))
 
         credentials.update({
             'authorize': True,
@@ -92,23 +87,6 @@ class AuthService:
             })
 
         return credentials
-
-    @classmethod
-    def _user_format(cls, _data):
-        column_names = ['uuid', 'email', 'password_hash', 'name', 'last_name', 'birth_day',
-                        'created_at', 'updated_at']
-
-        data_dict = dict(zip(column_names, _data))
-
-        data_dict['email'] = cls._security_field.decrypt(_data.email)
-        data_dict['name'] = cls._security_field.decrypt(_data.name)
-        data_dict['last_name'] = cls._security_field.decrypt(_data.last_name)
-
-        if _data.birth_day:
-            birth_day_decrypt = cls._security_field.decrypt(_data.birth_day)
-            data_dict['birth_day'] = datetime.strptime(birth_day_decrypt, '%Y-%m-%d')
-
-        return cls._user_repository.create_object(data_dict)
 
     @classmethod
     def remove_access_user(cls, _jti, _ttype):

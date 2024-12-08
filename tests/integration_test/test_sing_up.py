@@ -18,11 +18,11 @@ class TestSingUp(BaseTestClass):
         response_data = response.get_json()
 
         user_exists = self.db_connection.session.query(User)\
-            .filter(User.uuid == response_data.get('user_uuid'))\
+            .filter(User.uuid == response_data['data']['uuid'])\
             .first()
 
         self.assert_json_response(response, 'Successful request', 201, None)
-        self.assertEqual(user_exists.uuid, uuid.UUID(response_data.get('user_uuid')))
+        self.assertEqual(user_exists.uuid, uuid.UUID(response_data['data']['uuid']))
 
     def test_sing_up_exists_user(self):
         headers.update({
@@ -46,11 +46,11 @@ class TestSingUp(BaseTestClass):
         response_data = response.get_json()
 
         user_exists = self.db_connection.session.query(User)\
-            .filter(User.uuid == response_data.get('user_uuid'))\
+            .filter(User.uuid == response_data['data']['uuid'])\
             .first()
 
         self.assert_json_response(response, 'Successful request', 201, None)
-        self.assertEqual(user_exists.uuid, uuid.UUID(response_data.get('user_uuid')))
+        self.assertEqual(user_exists.uuid, uuid.UUID(response_data['data']['uuid']))
 
     def test_sing_up_without_email(self):
         arrange = self.seed_payloads_new_user
