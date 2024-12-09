@@ -1,1 +1,1 @@
-from .user_repository import UserRepository  # noqa: F401
+from .example_repository import ExampleRepository  # noqa: F401

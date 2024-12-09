@@ -8,8 +8,7 @@ from src.config.databases import db
 from src.helpers import CryptographyMessage
 
 from tests.custom_asserts import CustomAsserts
-from tests.factory_test import (payload_create_new_user, payload_password, result_access_user,
-                                payload_user_info, result_user)
+from tests.factory_test import payload_example, result_example
 
 
 class BaseTestClass(unittest.TestCase, CustomAsserts):
@@ -27,13 +26,10 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
         self.api = self.app.test_client()
 
         # Seed
-        self.seed_payloads_new_user = payload_create_new_user()
-        self.seed_payloads_password = payload_password()
-        self.seed_payloads_user_info = payload_user_info()
+        self.seed_payloads_example = payload_example()
 
         # Responses
-        self.response_access_user = result_access_user()
-        self.response_user = result_user()
+        self.result_example = result_example()
 
         # Auth
         credential_string = f'{(qa_username)}:{qa_password}'
@@ -45,8 +41,5 @@ class BaseTestClass(unittest.TestCase, CustomAsserts):
 
     # Code that is executed after each test
     def tearDown(self):
-        try:
-            db.session.remove()
-            db.drop_all()
-        except Exception as e:
-            print(f"Error en tearDown: {str(e)}")
+        db.session.remove()
+        db.drop_all()

@@ -1,1 +1,1 @@
-from .user import User  # noqa: F401
+from .Example import Example  # noqa: F401

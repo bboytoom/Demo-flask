@@ -16,7 +16,7 @@ marshmallow = Marshmallow()
 
 def create_app():
     from src.config import JWTConfig, jwt, db, config
-    from src.routes import users, generals
+    from src.routes import example, generals
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config[os.environ.get('ENV')])
@@ -31,7 +31,7 @@ def create_app():
     jwt.init_app(app)
 
     # Routes
-    app.register_blueprint(users)
+    app.register_blueprint(example)
     app.register_blueprint(generals)
 
     # Routes error
